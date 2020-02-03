@@ -78,8 +78,8 @@ set-abi-code() {
     cleos \
     --url http://nodeosd:8888 \
     --wallet-url http://127.0.0.1:8900 \
-    set abi dir1 dir.abi.json
-    set code dir1 dir_gc_opt.wasm
+    set abi dir1 dircontract.abi.json
+    set code dir1 dircontract_gc_opt.wasm
 }
 
 install_eoslime() {
