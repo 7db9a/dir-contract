@@ -440,11 +440,57 @@ describe('Basic operations', function () {
             assert.equal(creq_tbl_length, 2, warning_tbl_length);
         });
     })
+
     describe('Vote on change Request', function () {
         it('Should add a vote to a change request', async () => {
+
+            // Setup
+
             await snooze(snooze_ms);
 
-            assert.equal(1, 0, "Wrong vote id.");
+            await contract.sendcreq(
+                dir_id,
+                "src/lib.rs",
+                "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
+                contract.executor.name,
+            );
+
+            let creq_tbl = await contract.provider.eos.getTableRows({
+                code: contract.name,
+                scope: contract.name,
+                table: "creq",
+                json: true
+            });
+
+            let creq_id = creq_tbl["rows"][0]["creq_id"];
+
+
+            assert.equal(creq_id, 0, "Wrong change request id.");
+
+            // Vote
+
+            await snooze(snooze_ms);
+
+            await contract.voteoncreq(
+                creq_id,
+                contract.executor.name,
+            );
+
+            let vote_tbl = await contract.provider.eos.getTableRows({
+                code: contract.name,
+                scope: contract.name,
+                table: "vote",
+                json: true
+            });
+
+
+            function count(obj) { return Object.keys(obj).length; }
+
+            let vote_tbl_length = count(vote_tbl);
+
+            let warning_tbl_length = "Wrong number of votes: " + vote_tbl_length;
+
+            assert.equal(vote_tbl_length, 2, warning_tbl_length);
         });
     })
 });
