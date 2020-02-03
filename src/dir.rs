@@ -137,8 +137,6 @@ pub fn sendcreq(
 
 }
 
-eosio_cdt::abi!(mkdir, addfile, removefile, sendcreq);
-
 #[eosio::table("dirprofile")]
 pub struct dirprofile {
  #[eosio(primary_key)]
