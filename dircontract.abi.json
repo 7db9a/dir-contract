@@ -153,7 +153,7 @@
             ]
         },
         {
-            "name": "voteonreq",
+            "name": "voteoncreq",
             "base": "",
             "fields": [
                 {
@@ -211,8 +211,8 @@
             "ricardian_contract": "Sends a change request."
         },
         {
-            "name": "voteonreq",
-            "type": "voteonreq",
+            "name": "voteoncreq",
+            "type": "voteoncreq",
             "ricardian_contract": "Sends a change request."
         }
     ],
