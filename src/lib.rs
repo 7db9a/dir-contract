@@ -1,3 +1,6 @@
+use eosio::*;
+use eosio_cdt::*;
+
 pub mod dir;
 
 use dir::*;
