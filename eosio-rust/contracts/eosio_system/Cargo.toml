@@ -1,0 +1,15 @@
+[package]
+name = "eosio_system"
+version = "0.1.0"
+authors = ["Liam Curry <liam@sagan.software>"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+serde = "1.0"
+serde_derive = "1.0"
+eosio = { version = "0.3", path = "../../crates/eosio" }
+eosio_cdt = { version = "0.3", path = "../../crates/eosio_cdt" }
+lazy_static = "1.4"

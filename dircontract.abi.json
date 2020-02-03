@@ -1,0 +1,204 @@
+{
+    "version": "eosio::abi/1.1",
+    "types": [
+        {
+            "new_type_name": "account_name",
+            "type": "name"
+        }
+    ],
+    "structs": [
+        {
+            "name": "repoprofile",
+            "base": "",
+            "fields": [
+                {
+                    "name": "repo_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "repo_name",
+                    "type": "string"
+                },
+                {
+                    "name": "owner",
+                    "type": "account_name"
+                }
+            ]
+        },
+        {
+            "name": "mkdir",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "account_name"
+                },
+                {
+                    "name": "repo_name",
+                    "type": "string"
+                }
+            ]
+        },
+
+        {
+            "name": "repo",
+            "base": "",
+            "fields": [
+                {
+                    "name": "file_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "file_Name",
+                    "type": "string"
+                },
+                {
+                    "name": "ipfs_hash",
+                    "type": "string"
+                },
+                {
+                    "name": "repo_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "last_contributor",
+                    "type": "account_name"
+                }
+            ]
+        },
+
+        {
+            "name": "creq",
+            "base": "",
+            "fields": [
+                {
+                    "name": "creq_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "file_name",
+                    "type": "string"
+                },
+                {
+                    "name": "ipfs_hash",
+                    "type": "string"
+                },
+                {
+                    "name": "repo_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "contributor",
+                    "type": "account_name"
+                }
+            ]
+        },
+
+        {
+            "name": "addfile",
+            "base": "",
+            "fields": [
+                {
+                    "name": "file_name",
+                    "type": "string"
+                },
+                {
+                    "name": "ipfs_hash",
+                    "type": "string"
+                },
+                {
+                    "name": "repo_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "contributor",
+                    "type": "account_name"
+                }
+            ]
+        },
+        {
+            "name": "removefile",
+            "base": "",
+            "fields": [
+                {
+                    "name": "file_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "contributor",
+                    "type": "account_name"
+                }
+            ]
+        },
+        {
+            "name": "sendcreq",
+            "base": "",
+            "fields": [
+                {
+                    "name": "repo_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "file_name",
+                    "type": "string"
+                },
+                {
+                    "name": "ipfs_hash",
+                    "type": "string"
+                },
+                {
+                    "name": "contributor",
+                    "type": "account_name"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "mkdir",
+            "type": "mkdir",
+            "ricardian_contract": "Creates a repository."
+        },
+        {
+            "name": "addfile",
+            "type": "addfile",
+            "ricardian_contract": "Adds a file to a repository."
+        },
+        {
+            "name": "removefile",
+            "type": "removefile",
+            "ricardian_contract": "Removes a file to a repository."
+        },
+        {
+            "name": "sendcreq",
+            "type": "sendcreq",
+            "ricardian_contract": "Sends a change request."
+        }
+    ],
+    "tables": [
+        {
+            "name": "repoprofile",
+            "type": "repoprofile",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "repo",
+            "type": "repo",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "creq",
+            "type": "creq",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": [],
+    "abi_extensions": []
+}

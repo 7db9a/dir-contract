@@ -1,0 +1,12 @@
+[package]
+name = "eosio_msig"
+version = "0.1.0"
+authors = ["Liam Curry <liam@sagan.software>"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+eosio = { version = "0.3", path = "../../crates/eosio" }
+eosio_cdt = { version = "0.3", path = "../../crates/eosio_cdt" }

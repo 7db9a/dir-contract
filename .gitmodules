@@ -1,0 +1,6 @@
+[submodule "eosio-rust"]
+	path = eosio-rust
+	url = https://github.com/sagan-software/eosio-rust
+[submodule "testing/eoslime"]
+	path = testing/eoslime
+	url = https://github.com/LimeChain/eoslime

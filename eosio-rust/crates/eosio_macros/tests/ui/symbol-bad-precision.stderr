@@ -1,0 +1,5 @@
+error: number too large to fit in target type
+ --> $DIR/symbol-bad-precision.rs:6:16
+  |
+6 |     let _ = s!(256, "EOS");
+  |                ^^^
