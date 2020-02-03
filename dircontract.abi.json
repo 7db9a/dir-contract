@@ -153,6 +153,20 @@
             ]
         },
         {
+            "name": "voteonreq",
+            "base": "",
+            "fields": [
+                {
+                    "name": "creq_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "voter",
+                    "type": "account_name"
+                }
+            ]
+        },
+        {
             "name": "vote",
             "base": "",
             "fields": [
@@ -194,6 +208,11 @@
         {
             "name": "sendcreq",
             "type": "sendcreq",
+            "ricardian_contract": "Sends a change request."
+        },
+        {
+            "name": "voteonreq",
+            "type": "voteonreq",
             "ricardian_contract": "Sends a change request."
         }
     ],
