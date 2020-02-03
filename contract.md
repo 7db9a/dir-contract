@@ -1,5 +1,5 @@
 <h1 class="contract">mkdir</h1>
-Creates a repo.
+Creates a directory.
 <h1 class="contract">addfile</h1>
 Adds a file to a repo. Should be made private.
 If all the files in a table are deleted, then the file_id index is reset.
