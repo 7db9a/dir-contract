@@ -12,8 +12,8 @@ describe('Basic operations', function () {
     let contract;
     let tokensIssuer;
     let tokensHolder;
-    let repo_id;
-    let repo_name;
+    let dir_id;
+    let dir_name;
     let owner;
     var snooze_ms = 300;
 
@@ -43,24 +43,24 @@ describe('Basic operations', function () {
         contract = await eoslime.CleanDeployer.deploy(TOKEN_WASM_PATH, TOKEN_ABI_PATH);
         await contract.mkdir(contract.executor.name, "dir");
 
-        let repoprofile_tbl = await contract.provider.eos.getTableRows({
+        let dirprofile_tbl = await contract.provider.eos.getTableRows({
             code: contract.name,
             scope: contract.name,
-            table: "repoprofile",
+            table: "dirprofile",
             json: true
         });
 
-        repo_id = repoprofile_tbl["rows"][0]["repo_id"];
-        repo_name = repoprofile_tbl["rows"][0]["repo_name"];
-        owner = repoprofile_tbl["rows"][0]["owner"];
+        dir_id = dirprofile_tbl["rows"][0]["dir_id"];
+        dir_name = dirprofile_tbl["rows"][0]["dir_name"];
+        owner = dirprofile_tbl["rows"][0]["owner"];
 
-        assert.equal(repo_id, 0, "Wrong repo id.");
-        assert.equal(repo_name, "dir", "Wrong repo name.");
-        assert.equal(owner, contract.executor.name, "Wrong repo owner.");
+        assert.equal(dir_id, 0, "Wrong dir id.");
+        assert.equal(dir_name, "dir", "Wrong dir name.");
+        assert.equal(owner, contract.executor.name, "Wrong dir owner.");
 
     });
 
-    it("An account shouldn't be able to own two repos with the same name", async () => {
+    it("An account shouldn't be able to own two dirs with the same name", async () => {
         await snooze(snooze_ms);
 
         var err_json;
@@ -83,37 +83,37 @@ describe('Basic operations', function () {
         // by nodeos. Basically a data race. Consider sleeping for a few ms in between
         // contract calls. Search the web for "nodejs async sleep".
         assert.equal(err_code, 500, "Instead of an Internal Appliation Error, we got: " + err_json);
-        assert.equal(eosio_err_code, 3050003, "Two repos with same name are owned by a single account.");
-        assert.equal(eosio_err_name, "eosio_assert_message_exception", "Two repos with same name are owned by a single account.");
+        assert.equal(eosio_err_code, 3050003, "Two dirs with same name are owned by a single account.");
+        assert.equal(eosio_err_name, "eosio_assert_message_exception", "Two dirs with same name are owned by a single account.");
     });
 
     describe('Add files', function () {
-       it('Should add a file to a repo', async () => {
+       it('Should add a file to a dir', async () => {
            await snooze(snooze_ms);
 
            await contract.addfile(
                "src/lib.rs",
                "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
-               repo_id,
+               dir_id,
                contract.executor.name,
            );
 
-           let repo_tbl = await contract.provider.eos.getTableRows({
+           let dir_tbl = await contract.provider.eos.getTableRows({
                code: contract.name,
                scope: contract.name,
-               table: "repo",
+               table: "dir",
                json: true
            });
 
-           let file_id = repo_tbl["rows"][0]["file_id"];
+           let file_id = dir_tbl["rows"][0]["file_id"];
 
 
            assert.equal(file_id, 0, "Wrong file id.");
-           assert.equal(repo_name, "dir", "Wrong repo name.");
-           assert.equal(owner, contract.executor.name, "Wrong repo owner.");
+           assert.equal(dir_name, "dir", "Wrong dir name.");
+           assert.equal(owner, contract.executor.name, "Wrong dir owner.");
        });
 
-       it("A repo shouldn't be able to have duplicate file names", async () => {
+       it("A dir shouldn't be able to have duplicate file names", async () => {
            await snooze(snooze_ms);
 
            var err_json;
@@ -124,7 +124,7 @@ describe('Basic operations', function () {
            await contract.addfile(
                "src/lib.rs",
                "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
-               repo_id,
+               dir_id,
                contract.executor.name,
            );
 
@@ -134,7 +134,7 @@ describe('Basic operations', function () {
               await contract.addfile(
                   "src/lib.rs",
                   "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
-                  repo_id,
+                  dir_id,
                   contract.executor.name,
               );
            } catch (error) {
@@ -150,8 +150,8 @@ describe('Basic operations', function () {
            // by nodeos. Basically a data race. Consider sleeping for a few ms in between
            // contract calls. Search the web for "nodejs async sleep".
            assert.equal(err_code, 500, "Instead of an Internal Appliation Error, we got: " + err_json);
-           assert.equal(eosio_err_code, 3050003, "Two repos with same name are owned by a single account.");
-           assert.equal(eosio_err_name, "eosio_assert_message_exception", "Two repos with same name are owned by a single account.");
+           assert.equal(eosio_err_code, 3050003, "Two dirs with same name are owned by a single account.");
+           assert.equal(eosio_err_name, "eosio_assert_message_exception", "Two dirs with same name are owned by a single account.");
 
        });
 
@@ -161,44 +161,44 @@ describe('Basic operations', function () {
                 await contract.addfile(
                     file.toString(),
                     file.toString(),
-                    repo_id,
+                    dir_id,
                     contract.executor.name,
                 );
             }
 
-           let repo_tbl = await contract.provider.eos.getTableRows({
+           let dir_tbl = await contract.provider.eos.getTableRows({
                code: contract.name,
                scope: contract.name,
-               table: "repo",
+               table: "dir",
                json: true
            });
 
            function count(obj) { return Object.keys(obj).length; }
 
-           assert.equal(count(repo_tbl["rows"]), 10, "There are more files in the repo than there should.");
+           assert.equal(count(dir_tbl["rows"]), 10, "There are more files in the dir than there should.");
        });
     });
 
     describe('Remove files', function () {
-        it('Should remove a file from a repo', async () => {
+        it('Should remove a file from a dir', async () => {
             await snooze(snooze_ms);
 
             await contract.addfile(
                 "src/lib.rs",
                 "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
-                repo_id,
+                dir_id,
                 contract.executor.name,
             );
 
             await snooze(snooze_ms);
-            var repo_tbl = await contract.provider.eos.getTableRows({
+            var dir_tbl = await contract.provider.eos.getTableRows({
                 code: contract.name,
                 scope: contract.name,
-                table: "repo",
+                table: "dir",
                 json: true
             });
 
-            let file_id = repo_tbl["rows"][0]["file_id"];
+            let file_id = dir_tbl["rows"][0]["file_id"];
 
             await snooze(snooze_ms);
 
@@ -209,23 +209,23 @@ describe('Basic operations', function () {
 
             await snooze(snooze_ms);
 
-            repo_tbl = await contract.provider.eos.getTableRows({
+            dir_tbl = await contract.provider.eos.getTableRows({
                 code: contract.name,
                 scope: contract.name,
-                table: "repo",
+                table: "dir",
                 json: true
             });
 
-            assert.equal(repo_tbl["rows"][0], undefined, "Wrong file id.");
+            assert.equal(dir_tbl["rows"][0], undefined, "Wrong file id.");
         });
 
-        it('Should remove all files from a repo that has many files', async () => {
+        it('Should remove all files from a dir that has many files', async () => {
             for (file = 0; file < 10; file++) {
                 await snooze(snooze_ms);
                 await contract.addfile(
                     file.toString(),
                     file.toString(),
-                    repo_id,
+                    dir_id,
                     contract.executor.name,
                 );
             }
@@ -238,27 +238,27 @@ describe('Basic operations', function () {
                 );
             }
 
-            let repo_tbl = await contract.provider.eos.getTableRows({
+            let dir_tbl = await contract.provider.eos.getTableRows({
                 code: contract.name,
                 scope: contract.name,
-                table: "repo",
+                table: "dir",
                 json: true
             });
 
             function count(obj) { return Object.keys(obj).length; }
 
-            assert.equal(count(repo_tbl["rows"]), 0, "Didn't delete all 10 files in the repo");
+            assert.equal(count(dir_tbl["rows"]), 0, "Didn't delete all 10 files in the dir");
         });
 
         // Say we have files with IDs 0, 1, 2, 3. If 0, 1, and 3 are deleted, there should still
         // be a file with the file ID 2. So if a file is then added, it will have a file ID of 3.
-        it('Removing all files from a repo but one that is not at index 0 should not reset the file ID count.', async () => {
+        it('Removing all files from a dir but one that is not at index 0 should not reset the file ID count.', async () => {
             for (file = 0; file < 3; file++) {
                 await snooze(snooze_ms);
                 await contract.addfile(
                     file.toString(),
                     file.toString(),
-                    repo_id,
+                    dir_id,
                     contract.executor.name,
                 );
             }
@@ -283,24 +283,24 @@ describe('Basic operations', function () {
             await contract.addfile(
                 "src/lib.rs",
                 "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
-                repo_id,
+                dir_id,
                 contract.executor.name,
             );
 
             await snooze(snooze_ms);
 
-            let repo_tbl = await contract.provider.eos.getTableRows({
+            let dir_tbl = await contract.provider.eos.getTableRows({
                 code: contract.name,
                 scope: contract.name,
-                table: "repo",
+                table: "dir",
                 json: true
             });
 
             function count(obj) { return Object.keys(obj).length; }
 
-            assert.equal(repo_tbl["rows"][0]["file_id"], 2, "The repo table's file ID index was reset, or something.");
-            assert.equal(repo_tbl["rows"][1]["file_id"], 3, "The rpos table's file index was reset, or something.");
-            assert.equal(count(repo_tbl["rows"]), 2, "There are more files in the repo than there should.");
+            assert.equal(dir_tbl["rows"][0]["file_id"], 2, "The dir table's file ID index was reset, or something.");
+            assert.equal(dir_tbl["rows"][1]["file_id"], 3, "The dir table's file index was reset, or something.");
+            assert.equal(count(dir_tbl["rows"]), 2, "There are more files in the dir than there should.");
 
         });
     });
@@ -310,7 +310,7 @@ describe('Basic operations', function () {
             await snooze(snooze_ms);
 
             await contract.sendcreq(
-                repo_id,
+                dir_id,
                 "src/lib.rs",
                 "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
                 contract.executor.name,
@@ -335,7 +335,7 @@ describe('Basic operations', function () {
             for (file = 0; file < 11; file++) {
                 await snooze(snooze_ms);
                 await contract.sendcreq(
-                    repo_id,
+                    dir_id,
                     file.toString(),
                     file.toString(),
                     contract.executor.name,
@@ -356,22 +356,22 @@ describe('Basic operations', function () {
             assert.equal(count(creq_tbl["rows"]), 10, "Nodeos let an account do more than 10 consecutive actions?");
         });
 
-        it('change requests sent to 2 different repos should globally increment change request IDs', async () => {
+        it('change requests sent to 2 different dirs should globally increment change request IDs', async () => {
             await snooze(snooze_ms);
 
             await contract.sendcreq(
-                repo_id,
+                dir_id,
                 "src/lib.rs",
                 "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
                 contract.executor.name,
             );
 
             await snooze(snooze_ms);
-            await contract.mkdir(contract.executor.name, "2ndRepo");
+            await contract.mkdir(contract.executor.name, "2nddir");
 
             await snooze(snooze_ms);
             await contract.sendcreq(
-                1, // refers to "2ndRepo" (index starts at 0)
+                1, // refers to "2nddir" (index starts at 0)
                 "src/lib.rs",
                 "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
                 contract.executor.name,
@@ -386,17 +386,17 @@ describe('Basic operations', function () {
 
             function count(obj) { return Object.keys(obj).length; }
 
-            assert.equal(count(creq_tbl["rows"]), 2, "change requests from another repo isn't globally incrementing PR IDs.");
+            assert.equal(count(creq_tbl["rows"]), 2, "change requests from another dir isn't globally incrementing change request IDs.");
         });
 
         it('Should send two consecutive change request on an existing file', async () => {
             await snooze(snooze_ms);
 
-            // Adding a file to a repo.
+            // Adding a file to a dir.
             await contract.addfile(
                 "src/lib.rs",
                 "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
-                repo_id,
+                dir_id,
                 contract.executor.name,
             );
 
@@ -404,7 +404,7 @@ describe('Basic operations', function () {
 
             // Sending a change request to change the file added above.
             await contract.sendcreq(
-                repo_id,
+                dir_id,
                 "src/lib.rs",
                 "QmcRg8D4QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63g5c2",
                 contract.executor.name,
@@ -413,7 +413,7 @@ describe('Basic operations', function () {
             await snooze(snooze_ms);
 
             await contract.sendcreq(
-                repo_id,
+                dir_id,
                 "src/lib.rs",
                 "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
                 contract.executor.name,

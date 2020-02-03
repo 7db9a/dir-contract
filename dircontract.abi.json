@@ -8,15 +8,15 @@
     ],
     "structs": [
         {
-            "name": "repoprofile",
+            "name": "dirprofile",
             "base": "",
             "fields": [
                 {
-                    "name": "repo_id",
+                    "name": "dir_id",
                     "type": "uint64"
                 },
                 {
-                    "name": "repo_name",
+                    "name": "dir_name",
                     "type": "string"
                 },
                 {
@@ -34,14 +34,14 @@
                     "type": "account_name"
                 },
                 {
-                    "name": "repo_name",
+                    "name": "dir_name",
                     "type": "string"
                 }
             ]
         },
 
         {
-            "name": "repo",
+            "name": "dir",
             "base": "",
             "fields": [
                 {
@@ -57,7 +57,7 @@
                     "type": "string"
                 },
                 {
-                    "name": "repo_id",
+                    "name": "dir_id",
                     "type": "uint64"
                 },
                 {
@@ -84,7 +84,7 @@
                     "type": "string"
                 },
                 {
-                    "name": "repo_id",
+                    "name": "dir_id",
                     "type": "uint64"
                 },
                 {
@@ -107,7 +107,7 @@
                     "type": "string"
                 },
                 {
-                    "name": "repo_id",
+                    "name": "dir_id",
                     "type": "uint64"
                 },
                 {
@@ -135,7 +135,7 @@
             "base": "",
             "fields": [
                 {
-                    "name": "repo_id",
+                    "name": "dir_id",
                     "type": "uint64"
                 },
                 {
@@ -157,17 +157,17 @@
         {
             "name": "mkdir",
             "type": "mkdir",
-            "ricardian_contract": "Creates a repository."
+            "ricardian_contract": "Creates a dirsitory."
         },
         {
             "name": "addfile",
             "type": "addfile",
-            "ricardian_contract": "Adds a file to a repository."
+            "ricardian_contract": "Adds a file to a dirsitory."
         },
         {
             "name": "removefile",
             "type": "removefile",
-            "ricardian_contract": "Removes a file to a repository."
+            "ricardian_contract": "Removes a file to a dirsitory."
         },
         {
             "name": "sendcreq",
@@ -177,15 +177,15 @@
     ],
     "tables": [
         {
-            "name": "repoprofile",
-            "type": "repoprofile",
+            "name": "dirprofile",
+            "type": "dirprofile",
             "index_type": "i64",
             "key_names": [],
             "key_types": []
         },
         {
-            "name": "repo",
-            "type": "repo",
+            "name": "dir",
+            "type": "dir",
             "index_type": "i64",
             "key_names": [],
             "key_types": []

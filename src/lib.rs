@@ -5,54 +5,54 @@ use PrimaryTableCursor as ptc;
 #[eosio::action]
 fn mkdir(
     owner: AccountName,
-    repo_name: String,
+    dir_name: String,
 ) {
 
     require_auth(owner);
 
     let _self = current_receiver();
-    let repostbl = Repoprofile::table(_self, _self);
+    let dirstbl = dirprofile::table(_self, _self);
 
-    // Check if the owner already has a repo of the same name.
-    let repo_count = repostbl.iter().filter_map(|x| x.get().ok())
+    // Check if the owner already has a dir of the same name.
+    let dir_count = dirstbl.iter().filter_map(|x| x.get().ok())
                              .filter(|x| x.owner == owner)
-                             .filter(|x| x.repo_name == repo_name)
+                             .filter(|x| x.dir_name == dir_name)
                              .count();
-    check(repo_count == 0, "repo name already exists");
+    check(dir_count == 0, "dir name already exists");
 
-    let repo_id = repostbl.available_primary_key().expect("failed to get primary key");
+    let dir_id = dirstbl.available_primary_key().expect("failed to get primary key");
 
 
-    let repo = Repoprofile {
-        repo_id,
-        repo_name,
+    let dir = dirprofile {
+        dir_id,
+        dir_name,
         owner,
     };
 
-    repostbl.emplace(owner, &repo).check("write");
+    dirstbl.emplace(owner, &dir).check("write");
 }
 
 #[eosio::action]
 fn addfile(
     file_name: String,
     ipfs_hash: String,
-    repo_id: u64,
+    dir_id: u64,
     contributor: AccountName,
 ) {
     require_auth(contributor);
 
     let _self = current_receiver();
-    let table = Repoprofile::table(_self, _self);
+    let table = dirprofile::table(_self, _self);
 
     table
-        .find(repo_id)
+        .find(dir_id)
         .is_some()
-        .check("repo doesn't exist");
+        .check("dir doesn't exist");
 
-    let table = Repo::table(_self, _self);
-    // Count how many files have the same name within the repo specified by the eosio method caller.
+    let table = dir::table(_self, _self);
+    // Count how many files have the same name within the dir specified by the eosio method caller.
     let file_count = table.iter().filter_map(|x| x.get().ok())
-                          .filter(|x| x.repo_id == repo_id)
+                          .filter(|x| x.dir_id == dir_id)
                           .filter(|x| x.file_name == file_name)
                           .count();
 
@@ -60,11 +60,11 @@ fn addfile(
 
     let file_id = table.available_primary_key().expect("failed to get primary key");
 
-    let file = Repo {
+    let file = dir {
         file_id,
         file_name,
         ipfs_hash,
-        repo_id,
+        dir_id,
         last_contributor: contributor,
     };
 
@@ -79,9 +79,9 @@ fn removefile(
     require_auth(contributor);
 
     let _self = current_receiver();
-    let table = Repo::table(_self, _self);
+    let table = dir::table(_self, _self);
 
-    let erase = |cursor: ptc<Repo>| {cursor.erase().check("invalid index");};
+    let erase = |cursor: ptc<dir>| {cursor.erase().check("invalid index");};
     let unwind = || check(false, "file doesn't exist");
 
     // Remove the file or unwind the stack if the file can't be found.
@@ -92,7 +92,7 @@ fn removefile(
 
 #[eosio::action]
 fn sendcreq(
-   repo_id: u64, 
+   dir_id: u64, 
    file_name: String,
    ipfs_hash: String,
    contributor: AccountName,
@@ -101,24 +101,24 @@ fn sendcreq(
     let _self = current_receiver();
 
     let creqtbl = creq::table(_self, _self);
-    let proftbl = Repoprofile::table(_self, _self);
-    let repotbl = Repo::table(_self, _self);
+    let proftbl = dirprofile::table(_self, _self);
+    let dirtbl = dir::table(_self, _self);
 
     proftbl
-        .find(repo_id)
+        .find(dir_id)
         .is_some()
-        .check("repo doesn't exist");
+        .check("dir doesn't exist");
 
     // Does the file exist already?
-    let entry = repotbl.iter().filter_map(|x| x.get().ok())
-                          .filter(|x| x.repo_id == repo_id)
+    let entry = dirtbl.iter().filter_map(|x| x.get().ok())
+                          .filter(|x| x.dir_id == dir_id)
                           .find(|x| x.file_name == file_name); // find short-circuits
 
 
     if let Some(x) = entry {
         let file_id = x.file_id;
     } else {
-        let file_id = repotbl.available_primary_key().expect("failed to get primary key");
+        let file_id = dirtbl.available_primary_key().expect("failed to get primary key");
     }
 
     //eosio::print!("file_id:\n{:#?}", file_id);
@@ -129,7 +129,7 @@ fn sendcreq(
         creq_id,
         file_name,
         ipfs_hash,
-        repo_id,
+        dir_id,
         contributor,
     };
 
@@ -139,22 +139,22 @@ fn sendcreq(
 
 eosio_cdt::abi!(mkdir, addfile, removefile, sendcreq);
 
-#[eosio::table("repoprofile")]
-struct Repoprofile {
+#[eosio::table("dirprofile")]
+struct dirprofile {
  #[eosio(primary_key)]
- repo_id: u64,
- repo_name: String,
+ dir_id: u64,
+ dir_name: String,
  owner: AccountName,
 }
 
-#[eosio::table("repo")]
-struct Repo {
+#[eosio::table("dir")]
+struct dir {
  #[eosio(primary_key)]
  file_id: u64,
  file_name: String,
  ipfs_hash: String,
  #[eosio(secondary_key)]
- repo_id: u64,
+ dir_id: u64,
  last_contributor: AccountName,
 }
 
@@ -166,7 +166,7 @@ struct creq {
     file_name: String,
     ipfs_hash: String,
     #[eosio(secondary_key)]
-    repo_id: u64,
+    dir_id: u64,
     contributor: AccountName,
 
 }
