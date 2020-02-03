@@ -140,7 +140,7 @@ pub fn sendcreq(
 eosio_cdt::abi!(mkdir, addfile, removefile, sendcreq);
 
 #[eosio::table("dirprofile")]
-struct dirprofile {
+pub struct dirprofile {
  #[eosio(primary_key)]
  dir_id: u64,
  dir_name: String,
@@ -148,7 +148,7 @@ struct dirprofile {
 }
 
 #[eosio::table("dir")]
-struct dir {
+pub struct dir {
  #[eosio(primary_key)]
  file_id: u64,
  file_name: String,
@@ -160,7 +160,7 @@ struct dir {
 
 
 #[eosio::table("creq")]
-struct creq {
+pub struct creq {
     #[eosio(primary_key)]
     creq_id: u64,
     file_name: String,
