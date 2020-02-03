@@ -440,4 +440,11 @@ describe('Basic operations', function () {
             assert.equal(creq_tbl_length, 2, warning_tbl_length);
         });
     })
+    describe('Vote on change Request', function () {
+        it('Should add a vote to a change request', async () => {
+            await snooze(snooze_ms);
+
+            assert.equal(1, 0, "Wrong vote id.");
+        });
+    })
 });
