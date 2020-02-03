@@ -151,6 +151,28 @@
                     "type": "account_name"
                 }
             ]
+        },
+        {
+            "name": "vote",
+            "base": "",
+            "fields": [
+                {
+                    "name": "vote_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "creq_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "voter",
+                    "type": "account_name"
+                },
+                {
+                    "name": "vote",
+                    "type": "uint64"
+                }
+            ]
         }
     ],
     "actions": [
@@ -193,6 +215,13 @@
         {
             "name": "creq",
             "type": "creq",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "vote",
+            "type": "vote",
             "index_type": "i64",
             "key_names": [],
             "key_types": []
