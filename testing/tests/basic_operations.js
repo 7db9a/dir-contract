@@ -593,7 +593,6 @@ describe('Basic operations', function () {
                 0,
             );
 
-            // Duplicate vote.
            try {
                await contract.voteoncreq(
                      creq_id,
@@ -603,7 +602,7 @@ describe('Basic operations', function () {
             } catch (error) {
                     err_json = JSON.parse(error);
                     err_code = err_json.code;
-                    if (err_code == 500) {
+                    if (err_code == 409) {
                         eosio_err_code = err_json.error.code;
                         eosio_err_name = err_json.error.name;
                     }
@@ -632,7 +631,7 @@ describe('Basic operations', function () {
             assert.equal(vote, 0, "Voted '0' for 'no'" );
             assert.equal(vote_amount, 100, "Wrong voting power." );
 
-            assert.equal(err_code, 500, "Instead of an Internal Appliation Error, we got: " + err_json);
+            assert.equal(err_code, 409, "Instead of a duplicate transaction error, we got: " + err_json);
         });
     })
 });
