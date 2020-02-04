@@ -189,6 +189,10 @@
                 {
                     "name": "vote",
                     "type": "bool"
+                },
+                {
+                    "name": "amount",
+                    "type": "uint64"
                 }
             ]
         }

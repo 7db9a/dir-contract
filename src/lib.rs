@@ -29,6 +29,7 @@ pub fn voteoncreq(
         creq_id,
         voter,
         vote,
+        amount: 100,
     };
 
     vote_table.emplace(voter, &a_vote).check("write");
@@ -43,4 +44,5 @@ pub struct vote {
    creq_id: u64,
    voter: AccountName,
    vote: bool,
+   amount: u64,
 }
