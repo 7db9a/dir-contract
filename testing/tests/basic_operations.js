@@ -442,7 +442,7 @@ describe('Basic operations', function () {
     })
 
     describe('Vote on change Request', function () {
-        it('Should add a vote to a change request', async () => {
+        it('Should add a yes vote to a change request', async () => {
 
             // Setup
 
