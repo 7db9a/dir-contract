@@ -22,6 +22,13 @@ pub fn voteoncreq(
         .is_some()
         .check("change request doesn't exist");
 
+    let duplicate_vote_count = vote_table.iter().filter_map(|x| x.get().ok())
+                             .filter(|x| x.creq_id == creq_id)
+                             .filter(|x| x.voter == voter)
+                             .count();
+
+    check(duplicate_vote_count == 0, "duplicate vote");
+
     let vote_id = vote_table.available_primary_key().expect("failed to get primary key");
 
     let a_vote = vote {
