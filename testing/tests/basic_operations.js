@@ -490,9 +490,11 @@ describe('Basic operations', function () {
 
             let warning_tbl_length = "Wrong number of votes: " + vote_tbl_length;
             let vote_creq_id = creq_tbl["rows"][0]["creq_id"];
+            let vote_yes = vote_tbl["rows"][0]["vote"];
 
             assert.equal(vote_tbl_length, 2, warning_tbl_length);
             assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
+            assert.equal(vote_yes, 1, "Voted '1' for 'yes'" );
         });
     })
 });
