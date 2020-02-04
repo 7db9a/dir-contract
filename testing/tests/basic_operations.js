@@ -604,12 +604,11 @@ describe('Basic operations', function () {
             } catch (error) {
                     err_json = JSON.parse(error);
                     err_code = err_json.code;
-                    if (err_code == 409) {
+                    if (err_code == 500) {
                         eosio_err_code = err_json.error.code;
                         eosio_err_name = err_json.error.name;
                     }
             }
-
             let vote_tbl = await contract.provider.eos.getTableRows({
                 code: contract.name,
                 scope: contract.name,
@@ -633,7 +632,12 @@ describe('Basic operations', function () {
             assert.equal(vote, 0, "Voted '0' for 'no'" );
             assert.equal(vote_amount, 100, "Wrong voting power." );
 
-            assert.equal(err_code, 409, "Instead of a duplicate transaction error, we got: " + err_json);
+            // If we get a 409, it likely means the two contract calls were seen as duplicates
+            // by nodeos. Basically a data race. Consider sleeping for a few ms in between
+            // contract calls. Search the web for "nodejs async sleep".
+            assert.equal(err_code, 500, "Instead of an Internal Appliation Error, we got: " + err_json);
+            assert.equal(eosio_err_code, 3050003, "Duplicate vote.");
+            assert.equal(eosio_err_name, "eosio_assert_message_exception", "Duplicate vote.");
         });
     })
 });
