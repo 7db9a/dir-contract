@@ -11,6 +11,8 @@ pub fn voteoncreq(
    voter: AccountName,
    vote: bool,
 ) {
+    require_auth(owner);
+
     let _self = current_receiver();
     let creq_table = creq::table(_self, _self);
     let vote_table = vote::table(_self, _self);
