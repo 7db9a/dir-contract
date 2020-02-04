@@ -593,6 +593,8 @@ describe('Basic operations', function () {
                 0,
             );
 
+            await snooze(snooze_ms);
+
            try {
                await contract.voteoncreq(
                      creq_id,
