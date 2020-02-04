@@ -184,7 +184,7 @@
                 },
                 {
                     "name": "vote",
-                    "type": "uint64"
+                    "type": "bool"
                 }
             ]
         }
