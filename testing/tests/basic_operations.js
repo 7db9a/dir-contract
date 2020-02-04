@@ -489,7 +489,8 @@ describe('Basic operations', function () {
             let vote_tbl_length = count(vote_tbl);
 
             let warning_tbl_length = "Wrong number of votes: " + vote_tbl_length;
-            let vote_creq_id = creq_tbl["rows"][0]["creq_id"];
+
+            let vote_creq_id = vote_tbl["rows"][0]["creq_id"];
             let vote_yes = vote_tbl["rows"][0]["vote"];
 
             assert.equal(vote_tbl_length, 2, warning_tbl_length);
