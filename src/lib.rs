@@ -29,7 +29,7 @@ pub fn voteoncreq(
         creq_id,
         voter,
         vote,
-        amount: 100,
+        amount: 100, // To be assigned according to token holdings.
     };
 
     vote_table.emplace(voter, &a_vote).check("write");
