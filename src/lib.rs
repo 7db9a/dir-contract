@@ -9,6 +9,7 @@ use dir::*;
 pub fn voteoncreq(
    creq_id: u64,
    voter: AccountName,
+   vote: bool,
 ) {
     let _self = current_receiver();
     let creq_table = creq::table(_self, _self);
@@ -25,7 +26,7 @@ pub fn voteoncreq(
         vote_id,
         creq_id,
         voter,
-        vote: true,
+        vote,
     };
 
     vote_table.emplace(voter, &a_vote).check("write");

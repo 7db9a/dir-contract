@@ -163,6 +163,10 @@
                 {
                     "name": "voter",
                     "type": "account_name"
+                },
+                {
+                    "name": "vote",
+                    "type": "bool"
                 }
             ]
         },
