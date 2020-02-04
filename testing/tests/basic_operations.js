@@ -474,6 +474,7 @@ describe('Basic operations', function () {
             await contract.voteoncreq(
                 creq_id,
                 contract.executor.name,
+                1,
             );
 
             let vote_tbl = await contract.provider.eos.getTableRows({
@@ -529,6 +530,7 @@ describe('Basic operations', function () {
             await contract.voteoncreq(
                 creq_id,
                 contract.executor.name,
+                0,
             );
 
             let vote_tbl = await contract.provider.eos.getTableRows({
