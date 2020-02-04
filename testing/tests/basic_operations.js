@@ -489,8 +489,10 @@ describe('Basic operations', function () {
             let vote_tbl_length = count(vote_tbl);
 
             let warning_tbl_length = "Wrong number of votes: " + vote_tbl_length;
+            let vote_creq_id = creq_tbl["rows"][0]["creq_id"];
 
             assert.equal(vote_tbl_length, 2, warning_tbl_length);
+            assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
         });
     })
 });
