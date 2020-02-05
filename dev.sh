@@ -89,11 +89,36 @@ install_eoslime() {
     npm install --prefix /project/testing -y --save-dev --verbose
 }
 
-run_test() {
+run_basic_test() {
     docker exec \
     -it \
     docker_nodeosd_1 \
     npm test --prefix testing tests/basic_operations.js
+}
+
+run_vote_test() {
+    docker exec \
+    -it \
+    docker_nodeosd_1 \
+    npm test --prefix testing tests/vote_operations.js
+}
+
+run_test() {
+    if [ "$1" = "basic" ]; then
+        echo "basic test run"
+        run_basic_test
+    fi
+
+    if [ "$1" = "vote" ]; then
+        echo "vote test run"
+        run_vote_test
+    fi
+
+    if [ "$1" = "" ]; then
+        echo "all test run"
+        run_basic_test
+        run_vote_test
+    fi
 }
 
 run() {
@@ -143,5 +168,5 @@ fi
 if [ "$1" == "test" ]; then
     echo "test"
     install_eoslime # It's okay to run this repeatedly.
-    run_test
+    run_test $2
 fi
