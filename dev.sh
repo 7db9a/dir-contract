@@ -14,11 +14,26 @@ wasm-gc() {
     /root/.cargo/bin/wasm-gc target/wasm32-unknown-unknown/release/dircontract.wasm dircontract_gc.wasm
 }
 
+
+wasm-gc-token-test() {
+    docker exec \
+    -it \
+    docker_dir-contract_1 \
+    /root/.cargo/bin/wasm-gc target/wasm32-unknown-unknown/release/eosio_token.wasm testing/eoslime/example/eosio-token/contract/eosio.token.wasm
+}
+
 wasm-opt() {
     docker exec \
     -it \
     docker_dir-contract_1 \
     wasm-opt dircontract_gc.wasm --output dircontract_gc_opt.wasm -Oz
+}
+
+wasm-opt-token-test() {
+    docker exec \
+    -it \
+    docker_dir-contract_1 \
+    wasm-opt testing/eoslime/example/eosio-token/contract/eosio.token.wasm --output wasm-opt testing/eoslime/example/eosio-token/contract/eosio.token.wasm -Oz
 }
 
 build() {
@@ -82,6 +97,17 @@ set-abi-code() {
     set code dir1 dircontract_gc_opt.wasm
 }
 
+set-abi-code-token() {
+    docker exec \
+    -it \
+    docker_keosd_1 \
+    cleos \
+    --url http://nodeosd:8888 \
+    --wallet-url http://127.0.0.1:8900 \
+    set abi dir1 testing/eoslime/example/eosio-token/contract/eosio.token.abi
+    set code dir1 testing/eoslime/example/eosio-token/contract/eosio.token.wasm
+}
+
 install_eoslime() {
     docker exec \
     -it \
@@ -94,6 +120,20 @@ run_basic_test() {
     -it \
     docker_nodeosd_1 \
     npm test --prefix testing tests/basic_operations.js
+}
+
+run_token_test() {
+    docker exec \
+    -it \
+    docker_nodeosd_1 \
+    npm test --prefix testing eoslime/example/eosio-token/usage-example.js
+}
+
+run_account_test() {
+    docker exec \
+    -it \
+    docker_nodeosd_1 \
+    npm test --prefix testing eoslime/tests/account-tests.js
 }
 
 run_vote_test() {
