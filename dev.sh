@@ -7,6 +7,13 @@ cargo-build() {
     /root/.cargo/bin/cargo build --release --target=wasm32-unknown-unknown -p dircontract
 }
 
+cargo-build-token() {
+    docker exec \
+    -it \
+    docker_dir-contract_1 \
+    /root/.cargo/bin/cargo build --release --target=wasm32-unknown-unknown -p eosio_token
+}
+
 wasm-gc() {
     docker exec \
     -it \
@@ -19,7 +26,7 @@ wasm-gc-token-test() {
     docker exec \
     -it \
     docker_dir-contract_1 \
-    /root/.cargo/bin/wasm-gc target/wasm32-unknown-unknown/release/eosio_token.wasm testing/eoslime/example/eosio-token/contract/eosio.token.wasm
+    /root/.cargo/bin/wasm-gc target/wasm32-unknown-unknown/release/eosio_token.wasm eosio.token.wasm
 }
 
 wasm-opt() {
@@ -33,7 +40,7 @@ wasm-opt-token-test() {
     docker exec \
     -it \
     docker_dir-contract_1 \
-    wasm-opt testing/eoslime/example/eosio-token/contract/eosio.token.wasm --output wasm-opt testing/eoslime/example/eosio-token/contract/eosio.token.wasm -Oz
+    wasm-opt eosio.token.wasm --output wasm-opt eosio.token.wasm -Oz
 }
 
 build() {
@@ -104,8 +111,8 @@ set-abi-code-token() {
     cleos \
     --url http://nodeosd:8888 \
     --wallet-url http://127.0.0.1:8900 \
-    set abi dir1 testing/eoslime/example/eosio-token/contract/eosio.token.abi
-    set code dir1 testing/eoslime/example/eosio-token/contract/eosio.token.wasm
+    set abi dir1 contracts/eosio-rust/contracts/eosio_token/eosio_token.abi.json
+    set code dir1 eosio.token.wasm
 }
 
 install_eoslime() {
