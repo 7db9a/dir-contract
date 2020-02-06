@@ -40,7 +40,8 @@ describe('Basic operations', function () {
 
             You can access the contract account as -> contract.executor
         */
-        contract = await eoslime.CleanDeployer.deploy(TOKEN_WASM_PATH, TOKEN_ABI_PATH);
+        const tokenAccount = await eoslime.Account.createRandom();
+        contract = await eoslime.Contract.deployOnAccount(TOKEN_WASM_PATH, TOKEN_ABI_PATH, tokenAccount);
         await contract.mkdir(contract.executor.name, "dir");
 
         let dirprofile_tbl = await contract.provider.eos.getTableRows({
