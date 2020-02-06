@@ -1,1 +1,0 @@
-# Deriving Common Traits
