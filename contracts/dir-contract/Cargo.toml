@@ -10,7 +10,3 @@ crate-type = ["cdylib"]
 [dependencies]
 eosio = { path = "../../eosio-rust/crates/eosio" }
 eosio_cdt = { path = "../../eosio-rust/crates/eosio_cdt" }
-
-
-[profile.release]
-lto = true
