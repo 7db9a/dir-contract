@@ -1,6 +1,34 @@
+[profile.release]
+opt-level = "z"
+debug = false
+rpath = false
+lto = true
+debug-assertions = false
+codegen-units = 1
+
 [workspace]
 members = [
     "contracts/dir-contract",
     #"contracts/eosio_token",
+    # "contracts/eosio-assert",
+    "eosio-rust/contracts/eosio_bios",
+    "eosio-rust/contracts/eosio_forum",
+    "eosio-rust/contracts/eosio_msig",
+    "eosio-rust/contracts/eosio_system",
+    "eosio-rust/contracts/eosio_token",
+    "eosio-rust/contracts/eosio_wrap",
+    "eosio-rust/crates/eosio",
+    "eosio-rust/crates/eosio_cdt_sys",
+    "eosio-rust/crates/eosio_cdt",
+    "eosio-rust/crates/eosio_cli",
+    "eosio-rust/crates/eosio_macros_internal",
+    "eosio-rust/crates/eosio_macros",
+    "eosio-rust/crates/eosio_numstr",
+    # "eosio-rust/eosio-rpc",
+    "eosio-rust/examples/addressbook",
+    "eosio-rust/examples/hello_bare",
+    "eosio-rust/examples/hello",
+    "eosio-rust/examples/tictactoe",
+    "eosio-rust/scripts",
 ]
 
