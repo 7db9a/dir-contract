@@ -17,7 +17,7 @@
   },
   "homepage": "",
   "devDependencies": {
-    "eoslime": "0.0.11",
+    "eoslime": "1.0.2",
     "mocha": "6.1.4"
   }
 }
