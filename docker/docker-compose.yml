@@ -2,7 +2,7 @@ version: "3"
 
 services:
   nodeosd:
-    image: rust-eos-dev:latest
+    image: rust-eos-dev:0.2.0
     # Append --delete-all-blocks to the below command if you want a brand new blockchain.
     command: nodeos -e -p eosio --plugin eosio::producer_plugin --plugin eosio::chain_api_plugin --plugin eosio::http_plugin --plugin eosio::history_plugin --plugin eosio::history_api_plugin --access-control-allow-origin='*' --contracts-console --http-validate-host=false --http-server-address=0.0.0.0:8888 --verbose-http-errors --filter-on '"*"' "|" "tee nodeos.log"
     hostname: nodeosd
@@ -19,7 +19,7 @@ services:
     stop_grace_period: 10m
 
   keosd:
-    image: rust-eos-dev:latest
+    image: rust-eos-dev:0.2.0
     command: keosd --wallet-dir /opt/eosio/bin/data-dir --http-server-address=127.0.0.1:8900 --http-alias=keosd:8900 --http-alias=localhost:8900
     hostname: keosd
     links:
@@ -31,7 +31,7 @@ services:
     env_file:
         - eos.env
   dir-contract:
-    image: rust-eos-dev:latest
+    image: rust-eos-dev:0.2.0
     volumes:
       - ../:/project
       - dir-contract-cargo-data-volume:/usr/local/cargo
