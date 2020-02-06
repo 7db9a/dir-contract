@@ -4,7 +4,7 @@ cargo-build() {
     docker exec \
     -it \
     docker_dir-contract_1 \
-    /root/.cargo/bin/cargo build --release --target=wasm32-unknown-unknown
+    /root/.cargo/bin/cargo build --release --target=wasm32-unknown-unknown -p dircontract
 }
 
 wasm-gc() {
@@ -78,7 +78,7 @@ set-abi-code() {
     cleos \
     --url http://nodeosd:8888 \
     --wallet-url http://127.0.0.1:8900 \
-    set abi dir1 dircontract.abi.json
+    set abi dir1 contracts/dir-contract/dircontract.abi.json
     set code dir1 dircontract_gc_opt.wasm
 }
 
