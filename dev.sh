@@ -115,6 +115,20 @@ set-abi-code-token() {
     set code dir1 eosio.token.wasm
 }
 
+run_token_test() {
+    docker exec \
+    -it \
+    docker_nodeosd_1 \
+    npm test --prefix testing eoslime/tests/account-tests.js
+}
+
+orchestrate_token_test() {
+    start_docker_compose &
+    sleep 15
+    run_token_test
+    stop_docker_compose
+}
+
 install_eoslime() {
     docker exec \
     -it \
@@ -127,13 +141,6 @@ run_basic_test() {
     -it \
     docker_nodeosd_1 \
     npm test --prefix testing tests/basic_operations.js
-}
-
-run_token_test() {
-    docker exec \
-    -it \
-    docker_nodeosd_1 \
-    npm test --prefix testing eoslime/example/eosio-token/usage-example.js
 }
 
 run_account_test() {
@@ -161,7 +168,20 @@ run_test() {
         run_vote_test
     fi
 
-    if [ "$1" = "" ]; then
+    if [ "$1" = "token" ]; then
+        echo "token test run"
+        echo ""
+        echo "requires a clean blockchain for each run"
+        echo ""
+        echo "steps: "
+        echo " * docker-compose up"
+        echo " * npm test --prefix testing eoslime/tests/account-tests.js"
+        echo " * docker-compose stop"
+        echo ""
+        orchestrate_token_test
+    fi
+
+    if [ "$1" = "all" ]; then
         echo "all test run"
         run_basic_test
         run_vote_test
@@ -226,14 +246,14 @@ fi
 
 if [ "$1" == "test" ]; then
     echo "test"
-    install_eoslime # It's okay to run this repeatedly.
+    # Token tests must start up docker containers, so it must skip this part for now.
+    if [ "$2" != "token" ]; then
+        install_eoslime # It's okay to run this repeatedly.
+    fi
     run_test $2
 fi
 
-if [ "$1" == "launch-containers" ]; then
-    echo "dev.sh: execute script for docker-compose:"
-    echo ""
-    start_docker_compose &
-    sleep 10
-    stop_docker_compose
+if [ "$1" == "token-test" ]; then
+    echo "token-test"
+    run_token_test
 fi
