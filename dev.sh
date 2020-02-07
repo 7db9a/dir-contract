@@ -177,6 +177,18 @@ run() {
     run_test
 }
 
+start_docker_compose() {
+    cd docker
+    docker-compose up
+    cd -
+}
+
+stop_docker_compose() {
+    cd docker
+    docker-compose stop
+    cd -
+}
+
 if [ "$1" == "run" ]; then
     echo "run"
     run
@@ -216,4 +228,12 @@ if [ "$1" == "test" ]; then
     echo "test"
     install_eoslime # It's okay to run this repeatedly.
     run_test $2
+fi
+
+if [ "$1" == "launch-containers" ]; then
+    echo "dev.sh: execute script for docker-compose:"
+    echo ""
+    start_docker_compose &
+    sleep 10
+    stop_docker_compose
 fi
