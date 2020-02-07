@@ -119,7 +119,7 @@ run_token_test() {
     docker exec \
     -it \
     docker_nodeosd_1 \
-    npm test --prefix testing eoslime/tests/account-tests.js
+    npm test --prefix testing tests/token.js
 }
 
 orchestrate_token_test() {
