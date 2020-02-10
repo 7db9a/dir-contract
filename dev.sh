@@ -175,7 +175,7 @@ run_test() {
         echo ""
         echo "steps: "
         echo " * docker-compose up"
-        echo " * npm test --prefix testing eoslime/tests/account-tests.js"
+        echo " * npm test --prefix testing tests/token.js"
         echo " * docker-compose stop"
         echo ""
         orchestrate_token_test
