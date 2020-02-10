@@ -182,10 +182,12 @@ run_test() {
         orchestrate_token_test
     fi
 
-    if [ "$1" = "all" ]; then
+    if [ "$1" = "" ]; then
         echo "all test run"
         run_basic_test
         run_vote_test
+        stop_docker_compose
+        orchestrate_token_test
     fi
 }
 
