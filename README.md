@@ -28,7 +28,7 @@ Then from the top of your new project's directory:
 
 `./dev.sh wallet-create`
 
-Add the password to the `docker/eos.env`. The pub and priv key in the file is for development.
+Add the password to the `docker/eos.env`. The pub and priv keys in the file are for development.
 
 Restart the services:
 
@@ -68,3 +68,7 @@ However, you don't need services running for
 `./dev.sh test token`
 
 The above token test will automatically `docker-compose up` and `docker-compose stop`. It also quiets the nodeosd logging printouts for ease of reading test results.
+
+## Caveats
+
+The package name of your Cargo.toml will become the prefix fo the wasm binaries. See dev.sh and see the related commmands.
