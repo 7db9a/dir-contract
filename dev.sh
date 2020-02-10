@@ -174,9 +174,10 @@ run_test() {
         echo "requires a clean blockchain for each run"
         echo ""
         echo "steps: "
-        echo " * docker-compose up"
-        echo " * npm test --prefix testing tests/token.js"
-        echo " * docker-compose stop"
+        echo " 1. docker-compose up"
+        echo " 2. wait a few seconds"
+        echo " 3. npm test --prefix testing tests/token.js"
+        echo " 4. docker-compose stop"
         echo ""
         orchestrate_token_test
     fi
@@ -200,13 +201,13 @@ run() {
 start_docker_compose() {
     cd docker
     docker-compose up > /dev/null 2>&1
-    cd -
+    cd - > /dev/null
 }
 
 stop_docker_compose() {
     cd docker
     docker-compose stop
-    cd -
+    cd - > /dev/null
 }
 
 if [ "$1" == "run" ]; then
