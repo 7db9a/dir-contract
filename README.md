@@ -6,6 +6,7 @@ This is an experimental contract that enables and incentivizes collaborative dev
 
 1. [Overview](#overview)
 2. [Development Environment](#development-environment)
+3. [Testing](#testing)
 
 ## Development Environment
 
@@ -42,16 +43,28 @@ To build the rust code, deploy it locally, and run tests:
 
 The commands broken down individually:
 
-#### Build code
-
 `./dev.sh build`
 
-#### Set code
-
 `./dev.sh set`
-
-#### Test code
 
 `./dev.sh test`
 
 `dev.sh` is very basic and not generalized. Feel free to modify it or make your own script, or just run the actual underlying commands.
+
+## Testing
+
+Testing is awkward at the moment. I haven't figured out how to run consecutive clean tests that need eosio.token.
+
+The following tests must be ran against services that are already running (`docker-compose up`):
+
+`./dev.sh test basic`
+
+`./dev.sh test vote`
+
+`./dev.sh test`
+
+However, you don't need services running for
+
+`./dev.sh test token`
+
+The above token test will automatically `docker-compose up` and `docker-compose stop`. It also quiets the nodeosd logging printouts for ease of reading test results.
