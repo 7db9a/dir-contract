@@ -199,7 +199,7 @@ run() {
 
 start_docker_compose() {
     cd docker
-    docker-compose up
+    docker-compose up > /dev/null 2>&1
     cd -
 }
 
