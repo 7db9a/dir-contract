@@ -42,7 +42,13 @@ pub fn voteoncreq(
     vote_table.emplace(voter, &a_vote).check("write");
 }
 
-eosio_cdt::abi!(mkdir, addfile, removefile, sendcreq, voteoncreq);
+#[eosio::action]
+pub fn getbalance(holder: AccountName) {
+
+
+}
+
+eosio_cdt::abi!(mkdir, addfile, removefile, sendcreq, voteoncreq, getbalance);
 
 #[eosio::table("vote")]
 pub struct vote {
