@@ -2,8 +2,10 @@ use eosio::*;
 use eosio_cdt::*;
 
 pub mod dir;
+pub mod token;
 
 use dir::*;
+use token::*;
 
 #[eosio::action]
 pub fn voteoncreq(
@@ -44,8 +46,7 @@ pub fn voteoncreq(
 
 #[eosio::action]
 pub fn getbalance(holder: AccountName) {
-
-
+    let dir_balance = token::get_balance("DIR".to_string(), "test".to_string());
 }
 
 eosio_cdt::abi!(mkdir, addfile, removefile, sendcreq, voteoncreq, getbalance);
