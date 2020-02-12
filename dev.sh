@@ -49,7 +49,7 @@ build() {
     wasm-opt
 }
 
-wallet-create
+wallet-create() {
     docker exec \
     -it \
     docker_keosd_1 \
@@ -280,7 +280,6 @@ fi
 
 if [ "$1" == "token-test" ]; then
     echo "token-test"
-    set_
     run_token_test
 fi
 
