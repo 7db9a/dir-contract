@@ -29,6 +29,8 @@ describe('Tokens', function () {
 
             let receiverAccount = await Account.createRandom();
 
+            console.log("receiverAccount:\n" + receiverAccount);
+
             await tokenContract.transfer(tokenAccount.name, receiverAccount.name, SEND_AMOUNT + ' SYS', 'SYS')
 
             let receiverBalanceAfterSend = await receiverAccount.getBalance('SYS');

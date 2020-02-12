@@ -49,7 +49,7 @@ build() {
     wasm-opt
 }
 
-wallet-create() {
+wallet-create
     docker exec \
     -it \
     docker_keosd_1 \
@@ -212,6 +212,27 @@ stop_docker_compose() {
     cd - > /dev/null
 }
 
+
+# #######################################################
+#
+# Throw-away commands for experimental purposes.
+#
+# See
+# https://developers.eos.io/manuals/eos/latest/cleos/command-reference/get/currency-balance
+# #######################################################
+get-balance() {
+    docker exec \
+    -it \
+    docker_keosd_1 \
+    cleos \
+    --url http://nodeosd:8888 \
+    --wallet-url http://127.0.0.1:8900 \
+    get currency balance \
+    eosio.token \ # contract
+    test1 \       # account
+    DIR           # symbol
+}
+
 if [ "$1" == "run" ]; then
     echo "run"
     run
@@ -225,6 +246,7 @@ fi
 if [ "$1" == "set" ]; then
     echo "set"
     set-abi-code
+    set-abi-code-token
 fi
 
 if [ "$1" == "wallet-create" ]; then
@@ -258,5 +280,11 @@ fi
 
 if [ "$1" == "token-test" ]; then
     echo "token-test"
+    set_
     run_token_test
+fi
+
+if [ "$1" == "get-balance" ]; then
+    echo "get-balance"
+    get-balance
 fi
