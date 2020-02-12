@@ -29,7 +29,7 @@ describe('Tokens', function () {
 
             let receiverAccount = await Account.createRandom();
 
-            console.log("receiverAccount:\n" + receiverAccount);
+            console.log("receiverAccount name:\n" + receiverAccount.name);
 
             await tokenContract.transfer(tokenAccount.name, receiverAccount.name, SEND_AMOUNT + ' SYS', 'SYS')
 
