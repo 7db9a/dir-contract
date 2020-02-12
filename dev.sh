@@ -219,6 +219,7 @@ stop_docker_compose() {
 #
 # See
 # https://developers.eos.io/manuals/eos/latest/cleos/command-reference/get/currency-balance
+#
 # #######################################################
 get-balance() {
     docker exec \
@@ -227,10 +228,7 @@ get-balance() {
     cleos \
     --url http://nodeosd:8888 \
     --wallet-url http://127.0.0.1:8900 \
-    get currency balance \
-    eosio.token \ # contract
-    test1 \       # account
-    DIR           # symbol
+    get currency balance eosio.token $1 $2
 }
 
 if [ "$1" == "run" ]; then
@@ -285,5 +283,5 @@ fi
 
 if [ "$1" == "get-balance" ]; then
     echo "get-balance"
-    get-balance
+    get-balance $2 $3
 fi
