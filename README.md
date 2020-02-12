@@ -7,6 +7,7 @@ This is an experimental contract that enables and incentivizes collaborative dev
 1. [Overview](#overview)
 2. [Development Environment](#development-environment)
 3. [Testing](#testing)
+4. [Help](#Help)
 
 ## Development Environment
 
@@ -68,6 +69,41 @@ However, you don't need services running for
 `./dev.sh test token`
 
 The above token test will automatically `docker-compose up` and `docker-compose stop`. It also quiets the nodeosd logging printouts for ease of reading test results.
+
+## Help
+
+#### Wrong permissions or keys
+You may at some point get an `Error 3090003` about wrong keys or permissions. Most likely you need to create an account on local nodeos (maybe you deleted a docker volume or ran `docker-compose --force-recreate`).
+
+`./dev.sh account-create`
+
+If `./dev.sh set` doesn't work after that, try
+
+`./dev.sh wallet-create`
+
+If you get a new password, you'll have to place it in `docker/eos.env`.
+
+Now try the following
+
+```
+./dev.sh import
+./dv.sh wallet-unlock
+./dev.sh account-create
+```
+
+`./dev.sh set` should work now.
+
+#### Reset wallet
+
+You may want to delete your wallet for some reason.
+
+`docker exec -it docker_keosd_1 bash`
+
+Then in the container:
+
+`rm /opt/eosio/bin/data-dir/dir1.wallet`
+
+...or whichever wallet you want to get rid of in `data-dir`.
 
 ## Caveats
 
