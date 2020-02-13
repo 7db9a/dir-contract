@@ -10,3 +10,5 @@ crate-type = ["cdylib"]
 [dependencies]
 eosio = "0.3.0"
 eosio_cdt = "0.3.0"
+eosio_numstr = "0.3.0"
+eosio_token = { path = "../eosio_token" }
