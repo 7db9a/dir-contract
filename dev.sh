@@ -231,6 +231,31 @@ get-balance() {
     get currency balance eosio.token $1 $2
 }
 
+mkdir-rust() {
+    docker exec \
+    -it \
+    docker_keosd_1 \
+    cleos \
+    --url http://nodeosd:8888 \
+    --wallet-url http://127.0.0.1:8900 \
+    get \
+    abi \
+    dir1
+    #--help
+    #push action dir1 mkdir '["test", "directory"]' -p 'dir1@active'
+}
+
+get-balance-rust() {
+    docker exec \
+    -it \
+    docker_keosd_1 \
+    cleos \
+    --url http://nodeosd:8888 \
+    --wallet-url http://127.0.0.1:8900 \
+    push action dir1 getbalance '["SYS", "l321e5e2e2d1"]' -p 'dir1@active'
+}
+#`cleos push action testuser1 createrepo '["testuser1", "rust-eos"]' -p 'testuser1@active'`
+
 if [ "$1" == "run" ]; then
     echo "run"
     run
@@ -284,4 +309,14 @@ fi
 if [ "$1" == "get-balance" ]; then
     echo "get-balance"
     get-balance $2 $3
+fi
+
+if [ "$1" == "get-balance-rust" ]; then
+    echo "get-balance-rust"
+    get-balance-rust
+fi
+
+if [ "$1" == "mkdir-rust" ]; then
+    echo "mkdir"
+    mkdir-rust
 fi
