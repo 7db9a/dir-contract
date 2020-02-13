@@ -201,8 +201,12 @@
             "base": "",
             "fields": [
                 {
+                    "name": "symbol",
+                    "type": "string"
+                },
+                {
                     "name": "holder",
-                    "type": "account_name"
+                    "type": "string"
                 }
             ]
         }
