@@ -44,12 +44,7 @@ pub fn voteoncreq(
     vote_table.emplace(voter, &a_vote).check("write");
 }
 
-#[eosio::action]
-pub fn getbalance(symbol: String, holder: String) {
-    token::get_balance(symbol, holder)
-}
-
-eosio_cdt::abi!(mkdir, addfile, removefile, sendcreq, voteoncreq, getbalance);
+eosio_cdt::abi!(mkdir, addfile, removefile, sendcreq, voteoncreq);
 
 #[eosio::table("vote")]
 pub struct vote {
@@ -60,3 +55,4 @@ pub struct vote {
    vote: bool,
    amount: u64,
 }
+

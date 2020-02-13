@@ -195,20 +195,6 @@
                     "type": "uint64"
                 }
             ]
-        },
-        {
-            "name": "getbalance",
-            "base": "",
-            "fields": [
-                {
-                    "name": "symbol",
-                    "type": "string"
-                },
-                {
-                    "name": "holder",
-                    "type": "string"
-                }
-            ]
         }
     ],
     "actions": [
@@ -235,11 +221,6 @@
         {
             "name": "voteoncreq",
             "type": "voteoncreq",
-            "ricardian_contract": "Sends a change request."
-        },
-        {
-            "name": "getbalance",
-            "type": "getbalance",
             "ricardian_contract": "Sends a change request."
         }
     ],
