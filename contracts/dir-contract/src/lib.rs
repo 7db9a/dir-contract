@@ -45,8 +45,8 @@ pub fn voteoncreq(
 }
 
 #[eosio::action]
-pub fn getbalance(holder: AccountName) {
-    let dir_balance = token::get_balance("DIR".to_string(), "test".to_string());
+pub fn getbalance(symbol: String, holder: String) {
+    token::get_balance(symbol, holder)
 }
 
 eosio_cdt::abi!(mkdir, addfile, removefile, sendcreq, voteoncreq, getbalance);
