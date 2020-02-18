@@ -4,9 +4,6 @@ version = "0.1.0"
 authors = ["author's name <author's email>"]
 edition = "2018"
 
-[lib]
-crate-type = ["cdylib"]
-
 [dependencies]
 eosio = "0.3.0"
 eosio_cdt = "0.3.0"
