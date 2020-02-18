@@ -2,8 +2,10 @@ use eosio::*;
 use eosio_cdt::*;
 
 pub mod dir;
+pub mod token;
 
 use dir::*;
+use token::getbalance;
 
 #[eosio::action]
 pub fn voteoncreq(
@@ -16,6 +18,13 @@ pub fn voteoncreq(
     let _self = current_receiver();
     let creq_table = creq::table(_self, _self);
     let vote_table = vote::table(_self, _self);
+
+    let balance = getbalance(
+        voter,
+        eosio::Symbol::new(s!(4, "SYS"))
+    );
+
+    eosio_cdt::print!("account balance: ", balance);
 
     creq_table
         .find(creq_id)

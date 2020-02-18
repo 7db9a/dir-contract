@@ -1,22 +1,37 @@
 use eosio::*;
-use eosio_token::*;
+use eosio_cdt::*;
 use eosio_numstr::{symbol_from_bytes, name_from_bytes};
 
-pub fn get_balance(symbol: Symbol, holder: AccountName, issuer: AccountName) {
-    ////let owner = name_from_bytes(owner.bytes()).unwrap();
+#[derive(Read, Write, NumBytes, Copy, Clone)]
+pub struct Account {
+    pub balance: Asset,
+}
 
-    //let accts_table = Account::table(holder, issuer);
+impl Table for Account {
+    const NAME: TableName = TableName::new(n!("accounts"));
 
-    //let accts_cursor = accts_table
-    //    .find(symbol.code())
-    //    .expect("Balance row already deleted or never existed. Action won't have any effect.");
+    type Row = Self;
 
-    //let account = accts_cursor.get().expect("read");
+    fn primary_key(row: &Self::Row) -> u64 {
+        row.balance.symbol.code().as_u64()
+    }
+}
 
-    //assert!(
-    //    account.balance.amount == 0,
-    //    "Cannot close because the balance is not zero.",
-    //);
+//#[eosio::action]
+//pub fn balance(owner: AccountName, symbol: Symbol) {
+//    let balance = getbalance(owner, symbol);
+//    eosio_cdt::print!("account balance: ", balance);
+//}
 
-    //account.balance.amount
+pub fn getbalance(owner: AccountName, symbol: Symbol) -> i64 {
+    let code = current_receiver();
+    let accts_table = Account::table(code, owner);
+
+    let accts_cursor = accts_table
+        .find(symbol.code())
+        .expect("Balance row already deleted or never existed. Action won't have any effect.");
+
+    let account = accts_cursor.get().expect("read");
+
+    account.balance.amount
 }
