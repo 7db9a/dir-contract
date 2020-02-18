@@ -259,6 +259,16 @@ get-balance-rust() {
     push action eosio getbalance '["eosio.token", "le324caa15bc", "SYS"]' -p 'dir1@active'
 }
 
+# Getting token balance with eosio.token balance action.
+#docker exec \
+#    -it \
+#    docker_keosd_1 \
+#    cleos \
+#    --url http://nodeosd:8888 \
+#    --wallet-url http://127.0.0.1:8900 \
+#    push action eosio.token balance '["l135ac1ce2b5", "4,SYS"]' -p 'dir1@active'
+
+# Getting token balance from 'purely' a cleos command.
 #docker exec \
 #    -it \
 #    docker_keosd_1 \
