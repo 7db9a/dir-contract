@@ -26,7 +26,7 @@ wasm-gc-token-test() {
     docker exec \
     -it \
     docker_dir-contract_1 \
-    /root/.cargo/bin/wasm-gc target/wasm32-unknown-unknown/release/eosio_token.wasm eosio.token.wasm
+    /root/.cargo/bin/wasm-gc target/wasm32-unknown-unknown/release/eosio_token.wasm eosio_token_gc.wasm
 }
 
 wasm-opt() {
@@ -36,17 +36,21 @@ wasm-opt() {
     wasm-opt dircontract_gc.wasm --output dircontract_gc_opt.wasm -Oz
 }
 
+# Warns about: "Unexpected second positional argument 'eosio_token_gc_opt.wasm' for INFILE"
 wasm-opt-token-test() {
     docker exec \
     -it \
     docker_dir-contract_1 \
-    wasm-opt eosio.token.wasm --output wasm-opt eosio.token.wasm -Oz
+    wasm-opt eosio_token_gc.wasm --output wasm-opt eosio_token_gc_opt.wasm -Oz
 }
 
 build() {
     cargo-build
+    cargo-build-token
     wasm-gc
+    wasm-gc-token-test
     wasm-opt
+    #wasm-opt-token-test
 }
 
 wallet-create() {
@@ -112,7 +116,7 @@ set-abi-code-token() {
     --url http://nodeosd:8888 \
     --wallet-url http://127.0.0.1:8900 \
     set abi dir1 contracts/eosio-rust/contracts/eosio_token/eosio_token.abi.json
-    set code dir1 eosio.token.wasm
+    set code dir1 eosio_gc_opt.wasm
 }
 
 run_token_test() {
@@ -242,7 +246,7 @@ mkdir-rust() {
     abi \
     dir1
     #--help
-    #push action dir1 mkdir '["test", "directory"]' -p 'dir1@active'
+    #push action dir mkdir '["test", "directory"]' -p 'dir1@active'
 }
 
 get-balance-rust() {
@@ -252,7 +256,7 @@ get-balance-rust() {
     cleos \
     --url http://nodeosd:8888 \
     --wallet-url http://127.0.0.1:8900 \
-    push action dir1 getbalance '["SYS", "l321e5e2e2d1"]' -p 'dir1@active'
+    push action dirtkn getbalance '["SYS", "l321e5e2e2d1"]' -p 'dir1@active'
 }
 #`cleos push action testuser1 createrepo '["testuser1", "rust-eos"]' -p 'testuser1@active'`
 
