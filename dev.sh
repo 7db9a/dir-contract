@@ -258,6 +258,15 @@ get-balance-rust() {
     --wallet-url http://127.0.0.1:8900 \
     push action eosio getbalance '["eosio.token", "le324caa15bc", "SYS"]' -p 'dir1@active'
 }
+
+#docker exec \
+#    -it \
+#    docker_keosd_1 \
+#    cleos \
+#    --url http://nodeosd:8888 \
+#    --wallet-url http://127.0.0.1:8900 \
+#    get currency balance <contract> <account> <symbol>
+
 #`cleos push action testuser1 createrepo '["testuser1", "rust-eos"]' -p 'testuser1@active'`
 
 if [ "$1" == "run" ]; then

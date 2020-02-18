@@ -25,11 +25,11 @@ describe('Tokens', function () {
             const tokenContract = await eoslimeTool.Contract.deployOnAccount(TOKEN_WASM_PATH, TOKEN_ABI_PATH, tokenAccount);
             await tokenContract.create(tokenAccount.name, TOTAL_SUPPLY);
             await tokenContract.issue(tokenAccount.name, TOTAL_SUPPLY, 'memo');
-            const SEND_AMOUNT = '10.0000';
+            const SEND_AMOUNT = '20.0000';
 
             let receiverAccount = await Account.createRandom();
 
-            console.log("\ncontract name:\n" + tokenContract.name);
+            console.log("\ntokenAccount name:\n" + tokenAccount.name);
             console.log("receiverAccount name:\n" + receiverAccount.name);
 
             await tokenContract.transfer(tokenAccount.name, receiverAccount.name, SEND_AMOUNT + ' SYS', 'SYS')

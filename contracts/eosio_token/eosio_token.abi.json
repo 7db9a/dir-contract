@@ -136,20 +136,16 @@
 			]
 		},
 		{
-			"name": "getbalance",
+			"name": "balance",
 			"base": "",
 			"fields": [
 				{
-					"name": "holder",
-					"type": "account_name"
-				},
-				{
-					"name": "issuer",
+					"name": "owner",
 					"type": "account_name"
 				},
 				{
 					"name": "symbol",
-					"type": "string"
+					"type": "symbol"
 				}
 			]
 		}
@@ -186,8 +182,8 @@
 			"ricardian_contract": ""
 		},
 		{
-			"name": "getbalance",
-			"type": "getbalance",
+			"name": "balance",
+			"type": "balance",
 			"ricardian_contract": ""
 		}
 	],
