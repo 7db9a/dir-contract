@@ -17,7 +17,7 @@ describe('Tokens', function () {
         it('Should send EOS tokens', async () => {
 
             const TOKEN_ABI_PATH = './eosio_token.abi.json';
-            const TOKEN_WASM_PATH = './eosio.token.wasm';
+            const TOKEN_WASM_PATH = '../../../project/eosio_token_gc.wasm';
             const TOTAL_SUPPLY = '1000000000.0000 SYS';
 
             // Creates eosio.token account if you don't have it
@@ -29,6 +29,7 @@ describe('Tokens', function () {
 
             let receiverAccount = await Account.createRandom();
 
+            console.log("\ncontract name:\n" + tokenContract.name);
             console.log("receiverAccount name:\n" + receiverAccount.name);
 
             await tokenContract.transfer(tokenAccount.name, receiverAccount.name, SEND_AMOUNT + ' SYS', 'SYS')
