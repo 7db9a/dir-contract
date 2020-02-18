@@ -42,6 +42,7 @@ describe('Basic operations', function () {
         */
         const tokenAccount = await eoslime.Account.createRandom();
         contract = await eoslime.Contract.deployOnAccount(TOKEN_WASM_PATH, TOKEN_ABI_PATH, tokenAccount);
+        console.log("contract name :" + contract.name);
         await contract.mkdir(contract.executor.name, "dir");
 
         let dirprofile_tbl = await contract.provider.eos.getTableRows({

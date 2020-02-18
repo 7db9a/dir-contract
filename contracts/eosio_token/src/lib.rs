@@ -1,5 +1,6 @@
 use eosio::*;
 use eosio_cdt::*;
+use eosio_numstr::{symbol_from_bytes, name_from_bytes};
 
 #[derive(Read, Write, NumBytes, Copy, Clone)]
 pub struct Account {
@@ -244,21 +245,21 @@ fn close(owner: AccountName, symbol: Symbol) {
 pub fn getbalance(
     holder: AccountName,
     issuer: AccountName,
-    symbol: Symbol) {
+    symbol: String) {
     let accts_table = Account::table(holder, issuer);
 
-    let accts_cursor = accts_table
-        .find(symbol.code())
-        .expect("Balance row already deleted or never existed. Action won't have any effect.");
+    //let accts_cursor = accts_table
+    //    .find(Symbol(&symbol).code())
+    //    .expect("Balance row already deleted or never existed. Action won't have any effect.");
 
-    let account = accts_cursor.get().expect("read");
+    //let account = accts_cursor.get().expect("read");
 
-    assert!(
-        account.balance.amount == 0,
-        "Cannot close because the balance is not zero.",
-    );
+    //assert!(
+    //    account.balance.amount == 0,
+    //    "Cannot close because the balance is not zero.",
+    //);
 
-    eosio_cdt::print!("account balance: ", account.balance.amount);
+    //eosio_cdt::print!("account balance: ", account.balance.amount);
 }
 
 eosio_cdt::abi!(create, issue, transfer, open, close, retire, getbalance);

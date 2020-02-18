@@ -2,10 +2,8 @@ use eosio::*;
 use eosio_cdt::*;
 
 pub mod dir;
-pub mod token;
 
 use dir::*;
-use token::*;
 
 #[eosio::action]
 pub fn voteoncreq(

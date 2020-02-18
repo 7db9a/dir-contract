@@ -16,7 +16,7 @@ describe('Tokens', function () {
     describe('Send tokens', function () {
         it('Should send EOS tokens', async () => {
 
-            const TOKEN_ABI_PATH = './eosio_token.abi.json';
+            const TOKEN_ABI_PATH = '../../../project/contracts/eosio_token/eosio_token.abi.json';
             const TOKEN_WASM_PATH = '../../../project/eosio_token_gc.wasm';
             const TOTAL_SUPPLY = '1000000000.0000 SYS';
 
