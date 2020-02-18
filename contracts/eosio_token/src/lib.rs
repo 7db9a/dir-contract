@@ -243,6 +243,11 @@ fn close(owner: AccountName, symbol: Symbol) {
 
 #[eosio::action]
 pub fn balance(owner: AccountName, symbol: Symbol) {
+    let balance = getbalance(owner, symbol);
+    eosio_cdt::print!("account balance: ", balance);
+}
+
+pub fn getbalance(owner: AccountName, symbol: Symbol) -> i64 {
     let code = current_receiver();
     let accts_table = Account::table(code, owner);
 
@@ -252,7 +257,7 @@ pub fn balance(owner: AccountName, symbol: Symbol) {
 
     let account = accts_cursor.get().expect("read");
 
-    eosio_cdt::print!("account balance: ", account.balance.amount);
+    account.balance.amount
 }
 
 eosio_cdt::abi!(create, issue, transfer, open, close, retire, balance);
