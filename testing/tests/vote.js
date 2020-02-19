@@ -5,6 +5,16 @@ const eoslimeTool = eoslime.init();
 const Account = eoslimeTool.Account;
 const Provider = eoslimeTool.Provider;
 
+const DIR_WASM_PATH = '../../../project/dircontract_gc_opt.wasm';
+const DIR_ABI_PATH =  '../../../project/contracts/dir-contract/dircontract.abi.json';
+const TOKEN_ABI_PATH = '../../../project/contracts/eosio_token/eosio_token.abi.json';
+const TOKEN_WASM_PATH = '../../../project/eosio_token_gc.wasm';
+const TOTAL_SUPPLY = '1000000000.0000 SYS';
+
+// Creates eosio.token account if you don't have it
+const tokenAccount = await Account.createFromName('eosio.token');
+const tokenContract = await eoslimeTool.Contract.deployOnAccount(TOKEN_WASM_PATH, TOKEN_ABI_PATH, tokenAccount);
+
 /*
     You should have running local nodeos in order to run tests
 */
@@ -28,15 +38,6 @@ describe('Tokens', function () {
     describe('Voting operations', function () {
         it('Should send EOS tokens, create dir contract with an entry and the receiver votes on entry.', async () => {
 
-            const DIR_WASM_PATH = '../../../project/dircontract_gc_opt.wasm';
-            const DIR_ABI_PATH =  '../../../project/contracts/dir-contract/dircontract.abi.json';
-            const TOKEN_ABI_PATH = '../../../project/contracts/eosio_token/eosio_token.abi.json';
-            const TOKEN_WASM_PATH = '../../../project/eosio_token_gc.wasm';
-            const TOTAL_SUPPLY = '1000000000.0000 SYS';
-
-            // Creates eosio.token account if you don't have it
-            const tokenAccount = await Account.createFromName('eosio.token');
-            const tokenContract = await eoslimeTool.Contract.deployOnAccount(TOKEN_WASM_PATH, TOKEN_ABI_PATH, tokenAccount);
             await tokenContract.create(tokenAccount.name, TOTAL_SUPPLY);
             await tokenContract.issue(tokenAccount.name, TOTAL_SUPPLY, 'memo');
             const SEND_AMOUNT = '20.0000';
