@@ -126,10 +126,25 @@ run_token_test() {
     npm test --prefix testing tests/token.js
 }
 
+run_vote_test() {
+    docker exec \
+    -it \
+    docker_nodeosd_1 \
+    npm test --prefix testing tests/vote.js
+}
+
+
 orchestrate_token_test() {
     start_docker_compose &
     sleep 15
     run_token_test
+    stop_docker_compose
+}
+
+orchestrate_vote_test() {
+    start_docker_compose &
+    sleep 15
+    run_vote_test
     stop_docker_compose
 }
 
@@ -154,11 +169,11 @@ run_account_test() {
     npm test --prefix testing eoslime/tests/account-tests.js
 }
 
-run_vote_test() {
+deprecated_run_vote_test() {
     docker exec \
     -it \
     docker_nodeosd_1 \
-    npm test --prefix testing tests/vote_operations.js
+    npm test --prefix testing tests/deprecated_vote_operations.js
 }
 
 run_test() {
@@ -169,7 +184,7 @@ run_test() {
 
     if [ "$1" = "vote" ]; then
         echo "vote test run"
-        run_vote_test
+        orchestrate_vote_test
     fi
 
     if [ "$1" = "token" ]; then
@@ -189,9 +204,9 @@ run_test() {
     if [ "$1" = "" ]; then
         echo "all test run"
         run_basic_test
-        run_vote_test
         stop_docker_compose
         orchestrate_token_test
+        orchestrate_vote_test
     fi
 }
 
@@ -201,7 +216,7 @@ run() {
     account-create
     set-abi-code
     install_eoslime
-    run_test
+    run_test $1
 }
 
 start_docker_compose() {
