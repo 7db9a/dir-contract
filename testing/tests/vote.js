@@ -119,7 +119,7 @@ describe('Tokens', function () {
 
             assert.equal(vote_tbl_length, 2, warning_tbl_length);
             assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
-            assert.equal(vote, 0, "Voted '1' for 'yes'" );
+            assert.equal(vote, 1, "Voted '1' for 'yes'" );
             assert.equal(vote_amount, 100, "Wrong voting power." );
         });
     });
