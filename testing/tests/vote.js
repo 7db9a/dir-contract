@@ -154,7 +154,7 @@ describe('Vote', function () {
             assert.equal(vote_tbl_length, 2, warning_tbl_length);
             assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
             assert.equal(vote, 1, "Voted '1' for 'yes'" );
-            assert.equal(vote_amount, 100, "Wrong voting power." );
+            assert.equal(vote_amount, SEND_AMOUNT, "Wrong voting power." );
         });
         it('Again, should send EOS tokens, create dir contract with an entry and the receiver votes on entry.', async () => {
             let vote_setup_res = await voteSetup(
@@ -182,7 +182,7 @@ describe('Vote', function () {
             assert.equal(vote_tbl_length, 2, warning_tbl_length);
             assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
             assert.equal(vote, 1, "Voted '1' for 'yes'" );
-            assert.equal(vote_amount, 100, "Wrong voting power." );
+            assert.equal(vote_amount, SEND_AMOUNT, "Wrong voting power." );
         });
     });
 });
