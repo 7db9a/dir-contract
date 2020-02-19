@@ -39,10 +39,8 @@ describe('Vote', function () {
         // Creates eosio.token account if you don't have it
         tokenAccount = await Account.createFromName('eosio.token');
         tokenContract = await eoslimeTool.Contract.deployOnAccount(TOKEN_WASM_PATH, TOKEN_ABI_PATH, tokenAccount);
-
         await tokenContract.create(tokenAccount.name, TOTAL_SUPPLY);
         await tokenContract.issue(tokenAccount.name, TOTAL_SUPPLY, 'memo');
-
         console.log("\ntokenAccount name:\n" + tokenAccount.name);
     });
 
