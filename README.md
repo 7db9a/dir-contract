@@ -115,11 +115,11 @@ The workflow has loads of side-effects. You can break things very easily.
 
 #### Dev script
 
-It's not a 'real' command line tool, yet. Values and names are often hardcoded. At the very least, you can reference the commands as examples for one-off commands you many need.
+It's not a 'real' command line tool, yet. Values and names are often hardcoded. At the very least, you can reference it as examples for single commands you many need.
 
-Please monitor the output when you run `dev.sh` commands. For example, it sleeps to wait for docker to do stuff and is full of side-effects.
+Please monitor the output when you run `dev.sh` commands. For example, it sleeps to wait for docker to do stuff and has a lot of side-effects.
 
-`dev.sh` arose of a need to eliminate repetitive commands, and often forgeting to do stuff, like unlocking a wallet.
+`dev.sh` arose from  all the repetitive commands and forgeting to do stuff at the right time, like unlocking a wallet.
 
 #### Naming conventions
 
