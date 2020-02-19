@@ -52,6 +52,10 @@ The commands broken down individually:
 
 `dev.sh` is very basic and not generalized. Feel free to modify it or make your own script, or just run the actual underlying commands.
 
+You can also run, but against a specific test.
+
+`./dev.sh run token`
+
 ## Testing
 
 Testing is awkward at the moment. I haven't figured out how to run consecutive clean tests that need eosio.token.
@@ -60,19 +64,19 @@ The following tests must be ran against services that are already running (`dock
 
 `./dev.sh test basic`
 
-`./dev.sh test vote`
-
 `./dev.sh test`
 
 However, you don't need services running for
 
 `./dev.sh test token`
+`./dev.sh test vote`
 
 The above token test will automatically `docker-compose up` and `docker-compose stop`. It also quiets the nodeosd logging printouts for ease of reading test results.
 
 ## Help
 
 #### Wrong permissions or keys
+
 You may at some point get an `Error 3090003` about wrong keys or permissions. Most likely you need to create an account on local nodeos (maybe you deleted a docker volume or ran `docker-compose --force-recreate`).
 
 `./dev.sh account-create`
@@ -107,4 +111,20 @@ Then in the container:
 
 ## Caveats
 
-The package name of your Cargo.toml will become the prefix fo the wasm binaries. See dev.sh and see the related commmands.
+The workflow has loads of side-effects. You can break things very easily.
+
+#### Dev script
+
+It's not a 'real' command line tool, yet. Values and names are often hardcoded. At the very least, you can reference the commands as examples for one-off commands you many need.
+
+Please monitor the output when you run `dev.sh` commands. For example, it sleeps to wait for docker to do stuff and is full of side-effects.
+
+`dev.sh` arose of a need to eliminate repetitive commands, and often forgeting to do stuff, like unlocking a wallet.
+
+#### Naming conventions
+
+The package name of your Cargo.toml will become the prefix of the wasm binary's name. See dev.sh and see the related commmands.
+
+#### eosio_token contract
+
+A workspace member can't import eosio_token. eosio_token loads a dynamic library. It's declared as `cdylib` eosio_token's Cargo.toml.  If `cdylib` is declared again in the workspace member's Cargo.toml, it just doesn't work. That said, I haven't investigated it too much. The `cdylib` is for compiling wasm binaries, to my understanding. As a result of all this, I reduplicate the `balance` functions in `eosio_token`.
