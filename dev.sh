@@ -177,6 +177,10 @@ deprecated_run_vote_test() {
 }
 
 run_test() {
+    # Unlock and create account, otherwise we may not be able to push actions.
+    wallet-unlock
+    account-create
+
     if [ "$1" = "basic" ]; then
         echo "basic test run"
         run_basic_test
@@ -184,6 +188,18 @@ run_test() {
 
     if [ "$1" = "vote" ]; then
         echo "vote test run"
+        echo ""
+        echo "requires a clean blockchain for each run"
+        echo ""
+        echo "Following steps will be done automatically: "
+        echo " 1. docker-compose up"
+        echo " 2. wait a few seconds"
+        echo " 3. npm test --prefix testing tests/token.js"
+        echo " 4. docker-compose stop"
+        echo ""
+        echo "please wait ..."
+        echo ""
+        stop_docker_compose
         orchestrate_vote_test
     fi
 
@@ -192,12 +208,15 @@ run_test() {
         echo ""
         echo "requires a clean blockchain for each run"
         echo ""
-        echo "steps: "
+        echo "Following steps will be done automatically: "
         echo " 1. docker-compose up"
         echo " 2. wait a few seconds"
         echo " 3. npm test --prefix testing tests/token.js"
         echo " 4. docker-compose stop"
         echo ""
+        echo "please wait ..."
+        echo ""
+        stop_docker_compose
         orchestrate_token_test
     fi
 
@@ -211,6 +230,20 @@ run_test() {
 }
 
 run() {
+    start_docker_compose &
+    echo ""
+    echo "Following steps will be done automatically: "
+    echo " 1. start blockchain (docker-compose up)"
+    echo " 2. build"
+    echo " 3. unlock wallet and create account"
+    echo " 4. set code"
+    echo " 5. (re)-install eoslime"
+    echo " 6. run test"
+    echo ""
+    echo "Please monitor the output, in case of a failed step.
+    echo "Please wait a moment ..."
+    echo ""
+    sleep 5
     build
     wallet-unlock
     account-create
@@ -296,7 +329,7 @@ get-balance-rust() {
 
 if [ "$1" == "run" ]; then
     echo "run"
-    run
+    run $2
 fi
 
 if [ "$1" == "build" ]; then
@@ -334,6 +367,9 @@ if [ "$1" == "test" ]; then
     echo "test"
     # Token tests must start up docker containers, so it must skip this part for now.
     if [ "$2" != "token" ]; then
+        install_eoslime # It's okay to run this repeatedly.
+    fi
+    if [ "$2" != "vote" ]; then
         install_eoslime # It's okay to run this repeatedly.
     fi
     run_test $2
