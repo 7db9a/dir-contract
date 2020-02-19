@@ -24,13 +24,11 @@ impl Table for Account {
 //}
 
 pub fn getbalance(owner: AccountName, symbol: Symbol) -> i64 {
-    let code = current_receiver();
+    let code = eosio::AccountName::new(n!("eosio.token"));
     let accts_table = Account::table(code, owner);
-
     let accts_cursor = accts_table
         .find(symbol.code())
         .expect("Balance row already deleted or never existed. Action won't have any effect.");
-
     let account = accts_cursor.get().expect("read");
 
     account.balance.amount
