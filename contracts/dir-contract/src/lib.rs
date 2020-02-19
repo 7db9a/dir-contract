@@ -24,6 +24,9 @@ pub fn voteoncreq(
         eosio::Symbol::new(s!(4, "SYS"))
     );
 
+    // balance is of type i64;
+    let amount = balance as u64;
+
     eosio_cdt::print!("account balance: ", balance);
 
     creq_table
@@ -45,7 +48,7 @@ pub fn voteoncreq(
         creq_id,
         voter,
         vote,
-        amount: 100, // To be assigned according to token holdings.
+        amount, // To be assigned according to token holdings.
     };
 
     vote_table.emplace(voter, &a_vote).check("write");
