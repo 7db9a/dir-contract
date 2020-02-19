@@ -146,45 +146,15 @@ describe('Vote', function () {
             assert.equal(vote_amount, 100, "Wrong voting power." );
         });
         it('Again, should send EOS tokens, create dir contract with an entry and the receiver votes on entry.', async () => {
-
-            // Vote setup
-            contract = await eoslimeTool.Contract.deployOnAccount(DIR_WASM_PATH, DIR_ABI_PATH, receiverAccount);
-            await contract.mkdir(receiverAccount.name, "dir");
-
-            let dirprofile_tbl = await contract.provider.eos.getTableRows({
-                code: contract.name,
-                scope: contract.name,
-                table: "dirprofile",
-                json: true
-            });
-
-            dir_id = dirprofile_tbl["rows"][0]["dir_id"];
-            dir_name = dirprofile_tbl["rows"][0]["dir_name"];
-            owner = dirprofile_tbl["rows"][0]["owner"];
-
-            assert.equal(dir_id, 0, "Wrong dir id.");
-            assert.equal(dir_name, "dir", "Wrong dir name.");
-            assert.equal(owner, contract.executor.name, "Wrong dir owner.");
-
-            await snooze(snooze_ms);
-
-            await contract.sendcreq(
-                dir_id,
+            let result = await voteSetup(
+                receiverAccount,
                 "src/lib.rs",
                 "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
-                receiverAccount.name,
+                snooze_ms
             );
 
-            let creq_tbl = await contract.provider.eos.getTableRows({
-                code: contract.name,
-                scope: contract.name,
-                table: "creq",
-                json: true
-            });
-
-            let creq_id = creq_tbl["rows"][0]["creq_id"];
-
-            assert.equal(creq_id, 0, "Wrong change request id.");
+            let contract = result[0];
+            let creq_id = result[1];
 
             // Vote
 
