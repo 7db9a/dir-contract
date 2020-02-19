@@ -53,8 +53,13 @@ describe('Vote', function () {
             let receiverBalanceAfterSend = await receiverAccount.getBalance('SYS');
             assert(receiverBalanceAfterSend[0] == `${SEND_AMOUNT} SYS`, 'Incorrect tokens amount after send');
         });
-        it('Should send EOS tokens, create dir contract with an entry and the receiver votes on entry.', async () => {
 
+        async function voteSetup(
+            receiverAccount,
+            fileName,
+            fileHash,
+            snoozeMs
+        ) {
             // Vote setup
             contract = await eoslimeTool.Contract.deployOnAccount(DIR_WASM_PATH, DIR_ABI_PATH, receiverAccount);
             await contract.mkdir(receiverAccount.name, "dir");
@@ -74,12 +79,12 @@ describe('Vote', function () {
             assert.equal(dir_name, "dir", "Wrong dir name.");
             assert.equal(owner, contract.executor.name, "Wrong dir owner.");
 
-            await snooze(snooze_ms);
+            await snooze(snoozeMs);
 
             await contract.sendcreq(
                 dir_id,
-                "src/lib.rs",
-                "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
+                fileName,
+                fileHash,
                 receiverAccount.name,
             );
 
@@ -93,6 +98,20 @@ describe('Vote', function () {
             let creq_id = creq_tbl["rows"][0]["creq_id"];
 
             assert.equal(creq_id, 0, "Wrong change request id.");
+
+            return [contract, creq_id]
+        };
+
+        it('Should send EOS tokens, create dir contract with an entry and the receiver votes on entry.', async () => {
+            let result = await voteSetup(
+                receiverAccount,
+                "src/lib.rs",
+                "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
+                snooze_ms
+            );
+
+            let contract = result[0];
+            let creq_id = result[1];
 
             // Vote
 
