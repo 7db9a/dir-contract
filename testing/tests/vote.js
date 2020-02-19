@@ -25,8 +25,8 @@ describe('Tokens', function () {
     // throw duplication errors (ie, data races).
     const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-    describe('Send tokens', function () {
-        it('Should send EOS tokens', async () => {
+    describe('Voting operations', function () {
+        it('Should send EOS tokens, create dir contract with an entry and the receiver votes on entry.', async () => {
 
             const DIR_WASM_PATH = '../../../project/dircontract_gc_opt.wasm';
             const DIR_ABI_PATH =  '../../../project/contracts/dir-contract/dircontract.abi.json';
