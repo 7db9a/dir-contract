@@ -23,6 +23,8 @@ describe('Tokens', function () {
     let contract;
     let tokensIssuer;
     let tokensHolder;
+    let tokenContract
+    let tokenAccount
     let dir_id;
     let dir_name;
     let owner;
@@ -32,12 +34,15 @@ describe('Tokens', function () {
     // throw duplication errors (ie, data races).
     const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
 
+    before(async () => {
+        // Creates eosio.token account if you don't have it
+        tokenAccount = await Account.createFromName('eosio.token');
+        tokenContract = await eoslimeTool.Contract.deployOnAccount(TOKEN_WASM_PATH, TOKEN_ABI_PATH, tokenAccount);
+    });
+
+
     describe('Voting operations', function () {
         it('Should send EOS tokens, create dir contract with an entry and the receiver votes on entry.', async () => {
-            // Creates eosio.token account if you don't have it
-            const tokenAccount = await Account.createFromName('eosio.token');
-            const tokenContract = await eoslimeTool.Contract.deployOnAccount(TOKEN_WASM_PATH, TOKEN_ABI_PATH, tokenAccount);
-
             await tokenContract.create(tokenAccount.name, TOTAL_SUPPLY);
             await tokenContract.issue(tokenAccount.name, TOTAL_SUPPLY, 'memo');
 
