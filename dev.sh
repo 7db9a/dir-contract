@@ -240,7 +240,7 @@ run() {
     echo " 5. (re)-install eoslime"
     echo " 6. run test"
     echo ""
-    echo "Please monitor the output, in case of a failed step.
+    echo "Please monitor the output, in case of a failed step."
     echo "Please wait a moment ..."
     echo ""
     sleep 5
