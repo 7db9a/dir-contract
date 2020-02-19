@@ -128,5 +128,78 @@ describe('Vote', function () {
             assert.equal(vote, 1, "Voted '1' for 'yes'" );
             assert.equal(vote_amount, 100, "Wrong voting power." );
         });
+        it('Again, should send EOS tokens, create dir contract with an entry and the receiver votes on entry.', async () => {
+
+            // Vote setup
+            contract = await eoslimeTool.Contract.deployOnAccount(DIR_WASM_PATH, DIR_ABI_PATH, receiverAccount);
+            await contract.mkdir(receiverAccount.name, "dir");
+
+            let dirprofile_tbl = await contract.provider.eos.getTableRows({
+                code: contract.name,
+                scope: contract.name,
+                table: "dirprofile",
+                json: true
+            });
+
+            dir_id = dirprofile_tbl["rows"][0]["dir_id"];
+            dir_name = dirprofile_tbl["rows"][0]["dir_name"];
+            owner = dirprofile_tbl["rows"][0]["owner"];
+
+            assert.equal(dir_id, 0, "Wrong dir id.");
+            assert.equal(dir_name, "dir", "Wrong dir name.");
+            assert.equal(owner, contract.executor.name, "Wrong dir owner.");
+
+            await snooze(snooze_ms);
+
+            await contract.sendcreq(
+                dir_id,
+                "src/lib.rs",
+                "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
+                receiverAccount.name,
+            );
+
+            let creq_tbl = await contract.provider.eos.getTableRows({
+                code: contract.name,
+                scope: contract.name,
+                table: "creq",
+                json: true
+            });
+
+            let creq_id = creq_tbl["rows"][0]["creq_id"];
+
+            assert.equal(creq_id, 0, "Wrong change request id.");
+
+            // Vote
+
+            await snooze(snooze_ms);
+
+            await contract.voteoncreq(
+                creq_id,
+                receiverAccount.name,
+                1,
+            );
+
+            let vote_tbl = await contract.provider.eos.getTableRows({
+                code: contract.name,
+                scope: contract.name,
+                table: "vote",
+                json: true
+            });
+
+            function count(obj) { return Object.keys(obj).length; }
+
+            let vote_tbl_length = count(vote_tbl);
+
+            let warning_tbl_length = "Wrong number of votes: " + vote_tbl_length;
+
+            let vote_creq_id = vote_tbl["rows"][0]["creq_id"];
+            let vote = vote_tbl["rows"][0]["vote"];
+            let vote_amount = vote_tbl["rows"][0]["amount"];
+
+            assert.equal(vote_tbl_length, 2, warning_tbl_length);
+            assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
+            assert.equal(vote, 1, "Voted '1' for 'yes'" );
+            assert.equal(vote_amount, 100, "Wrong voting power." );
+        });
     });
 });
