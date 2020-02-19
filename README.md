@@ -4,10 +4,9 @@ This is an experimental contract that enables and incentivizes collaborative dev
 
 ## Table of Contents
 
-1. [Overview](#overview)
-2. [Development Environment](#development-environment)
-3. [Testing](#testing)
-4. [Help](#Help)
+1. [Development Environment](#development-environment)
+2. [Testing](#testing)
+3. [Gotcha's and caveats](#gotchas-and-caveats)
 
 ## Development Environment
 
@@ -73,7 +72,9 @@ However, you don't need services running for
 
 The above token test will automatically `docker-compose up` and `docker-compose stop`. It also quiets the nodeosd logging printouts for ease of reading test results.
 
-## Help
+## Gotcha's and caveats
+
+The workflow has loads of side-effects. You can break things very easily.
 
 #### Wrong permissions or keys
 
@@ -91,7 +92,7 @@ Now try the following
 
 ```
 ./dev.sh import
-./dv.sh wallet-unlock
+./dev.sh wallet-unlock
 ./dev.sh account-create
 ```
 
@@ -109,21 +110,17 @@ Then in the container:
 
 ...or whichever wallet you want to get rid of in `data-dir`.
 
-## Caveats
-
-The workflow has loads of side-effects. You can break things very easily.
-
 #### Dev script
 
 It's not a 'real' command line tool, yet. Values and names are often hardcoded. At the very least, you can reference it as examples for single commands you many need.
 
 Please monitor the output when you run `dev.sh` commands. For example, it sleeps to wait for docker to do stuff and has a lot of side-effects.
 
-`dev.sh` arose from  all the repetitive commands and forgeting to do stuff at the right time, like unlocking a wallet.
+`dev.sh` arose from  all the repetitive commands and forgetting to do stuff at the right time, like unlocking a wallet.
 
 #### Naming conventions
 
-The package name of your Cargo.toml will become the prefix of the wasm binary's name. See dev.sh and see the related commmands.
+The package name of your Cargo.toml will become the prefix of the wasm binary's name. See dev.sh and see the related commands.
 
 #### eosio_token contract
 
