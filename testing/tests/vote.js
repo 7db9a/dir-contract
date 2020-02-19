@@ -102,25 +102,11 @@ describe('Vote', function () {
             return [contract, creq_id]
         };
 
-        it('Should send EOS tokens, create dir contract with an entry and the receiver votes on entry.', async () => {
-            let result = await voteSetup(
-                receiverAccount,
-                "src/lib.rs",
-                "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
-                snooze_ms
-            );
-
-            let contract = result[0];
-            let creq_id = result[1];
-
-            // Vote
-
-            await snooze(snooze_ms);
-
+        async function vote_change_request(creqId, approve) {
             await contract.voteoncreq(
-                creq_id,
+                creqId,
                 receiverAccount.name,
-                1,
+                approve,
             );
 
             let vote_tbl = await contract.provider.eos.getTableRows({
@@ -132,13 +118,38 @@ describe('Vote', function () {
 
             function count(obj) { return Object.keys(obj).length; }
 
-            let vote_tbl_length = count(vote_tbl);
+            var vote_tbl_length = count(vote_tbl);
 
-            let warning_tbl_length = "Wrong number of votes: " + vote_tbl_length;
+            var warning_tbl_length = "Wrong number of votes: " + vote_tbl_length;
 
-            let vote_creq_id = vote_tbl["rows"][0]["creq_id"];
-            let vote = vote_tbl["rows"][0]["vote"];
-            let vote_amount = vote_tbl["rows"][0]["amount"];
+            var vote_creq_id = vote_tbl["rows"][0]["creq_id"];
+            var vote = vote_tbl["rows"][0]["vote"];
+            var vote_amount = vote_tbl["rows"][0]["amount"];
+            return [vote, vote_amount, vote_creq_id, vote_tbl_length, warning_tbl_length]
+        };
+
+        it('Should send EOS tokens, create dir contract with an entry and the receiver votes on entry.', async () => {
+            let vote_setup_res = await voteSetup(
+                receiverAccount,
+                "src/lib.rs",
+                "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
+                snooze_ms
+            );
+
+            let contract = vote_setup_res[0];
+            let creq_id = vote_setup_res[1];
+
+            await snooze(snooze_ms);
+
+            // Vote
+
+            vote_res = await vote_change_request(creq_id, 1);
+
+            vote = vote_res[0];
+            vote_amount = vote_res[1];
+            vote_creq_id = vote_res[2];
+            vote_tbl_length = vote_res[3];
+            warning_tbl_length = vote_res[4];
 
             assert.equal(vote_tbl_length, 2, warning_tbl_length);
             assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
@@ -146,42 +157,27 @@ describe('Vote', function () {
             assert.equal(vote_amount, 100, "Wrong voting power." );
         });
         it('Again, should send EOS tokens, create dir contract with an entry and the receiver votes on entry.', async () => {
-            let result = await voteSetup(
+            let vote_setup_res = await voteSetup(
                 receiverAccount,
                 "src/lib.rs",
                 "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
                 snooze_ms
             );
 
-            let contract = result[0];
-            let creq_id = result[1];
-
-            // Vote
+            let contract = vote_setup_res[0];
+            let creq_id = vote_setup_res[1];
 
             await snooze(snooze_ms);
 
-            await contract.voteoncreq(
-                creq_id,
-                receiverAccount.name,
-                1,
-            );
+            // Vote
 
-            let vote_tbl = await contract.provider.eos.getTableRows({
-                code: contract.name,
-                scope: contract.name,
-                table: "vote",
-                json: true
-            });
+            vote_res = await vote_change_request(creq_id, 1);
 
-            function count(obj) { return Object.keys(obj).length; }
-
-            let vote_tbl_length = count(vote_tbl);
-
-            let warning_tbl_length = "Wrong number of votes: " + vote_tbl_length;
-
-            let vote_creq_id = vote_tbl["rows"][0]["creq_id"];
-            let vote = vote_tbl["rows"][0]["vote"];
-            let vote_amount = vote_tbl["rows"][0]["amount"];
+            vote = vote_res[0];
+            vote_amount = vote_res[1];
+            vote_creq_id = vote_res[2];
+            vote_tbl_length = vote_res[3];
+            warning_tbl_length = vote_res[4];
 
             assert.equal(vote_tbl_length, 2, warning_tbl_length);
             assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
