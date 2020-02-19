@@ -16,7 +16,7 @@ const SEND_AMOUNT = '20.0000';
     You should have running local nodeos in order to run tests
 */
 
-describe('Tokens', function () {
+describe('Vote', function () {
     // Increase mocha(testing framework) time, otherwise tests fails
     this.timeout(15000);
 
@@ -41,7 +41,7 @@ describe('Tokens', function () {
     });
 
 
-    describe('Voting operations', function () {
+    describe('Vote operations', function () {
         it('Should send EOS tokens, create dir contract with an entry and the receiver votes on entry.', async () => {
             await tokenContract.create(tokenAccount.name, TOTAL_SUPPLY);
             await tokenContract.issue(tokenAccount.name, TOTAL_SUPPLY, 'memo');
