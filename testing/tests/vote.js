@@ -23,8 +23,9 @@ describe('Vote', function () {
     let contract;
     let tokensIssuer;
     let tokensHolder;
-    let tokenContract
-    let tokenAccount
+    let tokenContract;
+    let tokenAccount;
+    let receiverAccount;
     let dir_id;
     let dir_name;
     let owner;
@@ -39,22 +40,22 @@ describe('Vote', function () {
         tokenAccount = await Account.createFromName('eosio.token');
         tokenContract = await eoslimeTool.Contract.deployOnAccount(TOKEN_WASM_PATH, TOKEN_ABI_PATH, tokenAccount);
 
-         await tokenContract.create(tokenAccount.name, TOTAL_SUPPLY);
-         await tokenContract.issue(tokenAccount.name, TOTAL_SUPPLY, 'memo');
+        await tokenContract.create(tokenAccount.name, TOTAL_SUPPLY);
+        await tokenContract.issue(tokenAccount.name, TOTAL_SUPPLY, 'memo');
+
+        console.log("\ntokenAccount name:\n" + tokenAccount.name);
     });
 
 
     describe('Vote operations', function () {
-        it('Should send EOS tokens, create dir contract with an entry and the receiver votes on entry.', async () => {
-            let receiverAccount = await Account.createRandom();
-
-            console.log("\ntokenAccount name:\n" + tokenAccount.name);
+        beforeEach(async() => {
+            receiverAccount = await Account.createRandom();
             console.log("receiverAccount name:\n" + receiverAccount.name);
-
             await tokenContract.transfer(tokenAccount.name, receiverAccount.name, SEND_AMOUNT + ' SYS', 'SYS')
-
             let receiverBalanceAfterSend = await receiverAccount.getBalance('SYS');
             assert(receiverBalanceAfterSend[0] == `${SEND_AMOUNT} SYS`, 'Incorrect tokens amount after send');
+        });
+        it('Should send EOS tokens, create dir contract with an entry and the receiver votes on entry.', async () => {
 
             // Vote setup
             contract = await eoslimeTool.Contract.deployOnAccount(DIR_WASM_PATH, DIR_ABI_PATH, receiverAccount);
