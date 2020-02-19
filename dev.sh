@@ -136,14 +136,14 @@ run_vote_test() {
 
 orchestrate_token_test() {
     start_docker_compose &
-    sleep 15
+    sleep 7
     run_token_test
     stop_docker_compose
 }
 
 orchestrate_vote_test() {
     start_docker_compose &
-    sleep 15
+    sleep 7
     run_vote_test
     stop_docker_compose
 }
@@ -304,7 +304,7 @@ get-balance-rust() {
     cleos \
     --url http://nodeosd:8888 \
     --wallet-url http://127.0.0.1:8900 \
-    push action eosio getbalance '["eosio.token", "le324caa15bc", "SYS"]' -p 'dir1@active'
+    push action eosio getbalance '["eosio.token", "le324caa7bc", "SYS"]' -p 'dir1@active'
 }
 
 # Getting token balance with eosio.token balance action.
