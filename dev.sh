@@ -307,6 +307,11 @@ get-balance-rust() {
     push action eosio getbalance '["eosio.token", "le324caa7bc", "SYS"]' -p 'dir1@active'
 }
 
+vim-vt() {
+    vim -c "vsplit testing/tests/deprecated_vote_operations.js" \
+    testing/tests/vote.js
+}
+
 # Getting token balance with eosio.token balance action.
 #docker exec \
 #    -it \
@@ -393,4 +398,10 @@ fi
 if [ "$1" == "mkdir-rust" ]; then
     echo "mkdir"
     mkdir-rust
+fi
+
+
+if [ "$1" == "vim-vt" ]; then
+    echo "opening vim for vote test related"
+    vim-vt
 fi
