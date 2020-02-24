@@ -25,14 +25,14 @@ describe('Vote', function () {
     this.timeout(15000);
 
     var contract;
-    let tokensIssuer;
-    let tokensHolder;
-    let tokenContract;
-    let tokenAccount;
-    let receiverAccount;
-    let dir_id;
-    let dir_name;
-    let owner;
+    var tokensIssuer;
+    var tokensHolder;
+    var tokenContract;
+    var tokenAccount;
+    var receiverAccount;
+    var dir_id;
+    var dir_name;
+    var owner;
     var snooze_ms = 300;
 
     // We call this at the top of each test case, otherwise nodeosd could
@@ -72,8 +72,6 @@ describe('Vote', function () {
             fileHash,
             snoozeMs
         ) {
-            await contract.mkdir(receiverAccount.name, "dir");
-
             let dirprofile_tbl = await contract.provider.eos.getTableRows({
                 code: contract.name,
                 scope: contract.name,
@@ -119,7 +117,7 @@ describe('Vote', function () {
                 approve,
             );
 
-            let vote_tbl = await contract.provider.eos.getTableRows({
+            var vote_tbl = await contract.provider.eos.getTableRows({
                 code: contract.name,
                 scope: contract.name,
                 table: "vote",
@@ -140,6 +138,7 @@ describe('Vote', function () {
 
         it('Should vote on entry.', async () => {
             var contract = await eoslimeTool.Contract.deployOnAccount(DIR_WASM_PATH, DIR_ABI_PATH, receiverAccount);
+            await contract.mkdir(receiverAccount.name, "dir");
             let vote_setup_res = await voteSetup(
                 contract,
                 receiverAccount,
@@ -173,6 +172,7 @@ describe('Vote', function () {
 
         it('Should add a no vote to a change request', async () => {
             var contract = await eoslimeTool.Contract.deployOnAccount(DIR_WASM_PATH, DIR_ABI_PATH, receiverAccount);
+            await contract.mkdir(receiverAccount.name, "dir");
             let vote_setup_res = await voteSetup(
                 contract,
                 receiverAccount,
@@ -206,6 +206,7 @@ describe('Vote', function () {
 
         it('Should not add duplicate vote for a change request', async () => {
             var contract = await eoslimeTool.Contract.deployOnAccount(DIR_WASM_PATH, DIR_ABI_PATH, receiverAccount);
+            await contract.mkdir(receiverAccount.name, "dir");
             let vote_setup_res = await voteSetup(
                 contract,
                 receiverAccount,
@@ -256,6 +257,71 @@ describe('Vote', function () {
             assert.equal(err_code, 500, "Instead of an Internal Appliation Error, we got: " + err_json);
             assert.equal(eosio_err_code, 3050003, "Duplicate vote.");
             assert.equal(eosio_err_name, "eosio_assert_message_exception", "Duplicate vote.");
+        });
+
+        it('Should allow two users to vote on the same entry.', async () => {
+            var contract = await eoslimeTool.Contract.deployOnAccount(DIR_WASM_PATH, DIR_ABI_PATH, receiverAccount);
+            await contract.mkdir(receiverAccount.name, "dir");
+            var vote_setup_res = await voteSetup(
+                contract,
+                receiverAccount,
+                "src/lib.rs",
+                "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
+                snooze_ms
+            );
+
+            contract = vote_setup_res[0];
+            var creq_id = vote_setup_res[1];
+
+            await snooze(snooze_ms);
+
+            // Vote
+
+            vote_res = await vote_change_request(contract, creq_id, 1);
+
+            vote = vote_res[0];
+            vote_amount = vote_res[1];
+            vote_creq_id = vote_res[2];
+            vote_tbl_length = vote_res[3];
+            warning_tbl_length = vote_res[4];
+
+            var vote_amount_convert = await convert_eos_token_amount(vote_amount);
+
+            assert.equal(vote_tbl_length, 2, warning_tbl_length);
+            assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
+            assert.equal(vote, 1, "Voted '1' for 'yes'" );
+            assert.equal(vote_amount_convert, SEND_AMOUNT);
+
+            // Second user
+            vote_setup_res = await voteSetup(
+                contract,
+                receiverAccount,
+                "src/lib.rs",
+                "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
+                snooze_ms
+            );
+
+            contract = vote_setup_res[0];
+            creq_id = vote_setup_res[1];
+
+            await snooze(snooze_ms);
+
+            // Vote
+
+            vote_res = await vote_change_request(contract, creq_id, 1);
+
+            vote = vote_res[0];
+            vote_amount = vote_res[1];
+            vote_creq_id = vote_res[2];
+            vote_tbl_length = vote_res[3];
+            warning_tbl_length = vote_res[4];
+
+            vote_amount_convert = await convert_eos_token_amount(vote_amount);
+
+            assert.equal(vote_tbl_length, 2, warning_tbl_length);
+            assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
+            assert.equal(vote, 1, "Voted '1' for 'yes'" );
+            assert.equal(vote_amount_convert, SEND_AMOUNT);
         });
     });
 });
