@@ -312,6 +312,12 @@ vim-vt() {
     testing/tests/vote.js
 }
 
+vim-src() {
+    vim \
+    -c "vsplit contracts/dir-contract/src/dir.rs" \
+    contracts/dir-contract/src/lib.rs
+}
+
 # Getting token balance with eosio.token balance action.
 #docker exec \
 #    -it \
@@ -404,4 +410,9 @@ fi
 if [ "$1" == "vim-vt" ]; then
     echo "opening vim for vote test related"
     vim-vt
+fi
+
+if [ "$1" == "vim-src" ]; then
+    echo "opening vim for src files"
+    vim-src
 fi
