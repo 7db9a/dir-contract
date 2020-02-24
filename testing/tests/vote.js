@@ -162,6 +162,7 @@ describe('Vote', function () {
             assert.equal(vote, 1, "Voted '1' for 'yes'" );
             assert.equal(vote_amount_convert, SEND_AMOUNT);
         });
+
         it('Again, should send EOS tokens, create dir contract with an entry and the receiver votes on entry.', async () => {
             let vote_setup_res = await voteSetup(
                 receiverAccount,
@@ -190,6 +191,37 @@ describe('Vote', function () {
             assert.equal(vote_tbl_length, 2, warning_tbl_length);
             assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
             assert.equal(vote, 1, "Voted '1' for 'yes'" );
+            assert.equal(vote_amount_convert, SEND_AMOUNT);
+        });
+
+        it('Should add a no vote to a change request', async () => {
+            let vote_setup_res = await voteSetup(
+                receiverAccount,
+                "src/lib.rs",
+                "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
+                snooze_ms
+            );
+
+            let contract = vote_setup_res[0];
+            let creq_id = vote_setup_res[1];
+
+            await snooze(snooze_ms);
+
+            // Vote
+
+            vote_res = await vote_change_request(creq_id, 0);
+
+            vote = vote_res[0];
+            vote_amount = vote_res[1];
+            vote_creq_id = vote_res[2];
+            vote_tbl_length = vote_res[3];
+            warning_tbl_length = vote_res[4];
+
+            let vote_amount_convert = await convert_eos_token_amount(vote_amount);
+
+            assert.equal(vote_tbl_length, 2, warning_tbl_length);
+            assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
+            assert.equal(vote, 1, "Voted '0' for 'no'" );
             assert.equal(vote_amount_convert, SEND_AMOUNT);
         });
     });
