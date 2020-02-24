@@ -50,12 +50,19 @@ describe('Vote', function () {
 
 
     describe('Vote operations', function () {
-        beforeEach(async() => {
+        async function createRandomUser(
+        ) {
             receiverAccount = await Account.createRandom();
             console.log("receiverAccount name:\n" + receiverAccount.name);
             await tokenContract.transfer(tokenAccount.name, receiverAccount.name, SEND_AMOUNT + ' SYS', 'SYS')
             let receiverBalanceAfterSend = await receiverAccount.getBalance('SYS');
             assert(receiverBalanceAfterSend[0] == `${SEND_AMOUNT} SYS`, 'Incorrect tokens amount after send');
+
+            return receiverAccount
+        };
+
+        beforeEach(async() => {
+            receiverAccount = await createRandomUser();
         });
 
         async function voteSetup(
