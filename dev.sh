@@ -308,7 +308,7 @@ get-balance-rust() {
 }
 
 vim-vt() {
-    vim -c "vsplit testing/tests/deprecated_vote_operations.js" \
+    vim \
     testing/tests/vote.js
 }
 
