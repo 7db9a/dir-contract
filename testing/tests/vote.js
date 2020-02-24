@@ -242,6 +242,8 @@ describe('Vote', function () {
 
             vote_res = await vote_change_request(creq_id, 0);
 
+            await snooze(snooze_ms);
+
             //Voting again is not allowed!
             try {
                 await contract.voteoncreq(
@@ -274,7 +276,7 @@ describe('Vote', function () {
             // If we get a 409, it likely means the two contract calls were seen as duplicates
             // by nodeos. Basically a data race. Consider sleeping for a few ms in between
             // contract calls. Search the web for "nodejs async sleep".
-            assert.equal(err_code, 409, "Instead of an Internal Appliation Error, we got: " + err_json);
+            assert.equal(err_code, 500, "Instead of an Internal Appliation Error, we got: " + err_json);
             assert.equal(eosio_err_code, 3050003, "Duplicate vote.");
             assert.equal(eosio_err_name, "eosio_assert_message_exception", "Duplicate vote.");
         });
