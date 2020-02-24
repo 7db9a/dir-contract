@@ -215,11 +215,7 @@ describe('Vote', function () {
 
             //Voting again is not allowed!
             try {
-                await contract.voteoncreq(
-                      creq_id,
-                      contract.executor.name,
-                      0,
-                  );
+                await vote_change_request(creq_id, 0);
              } catch (error) {
                      err_json = JSON.parse(error);
                      err_code = err_json.code;
