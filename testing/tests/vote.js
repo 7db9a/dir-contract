@@ -24,7 +24,7 @@ describe('Vote', function () {
     // Increase mocha(testing framework) time, otherwise tests fails
     this.timeout(15000);
 
-    let contract;
+    var contract;
     let tokensIssuer;
     let tokensHolder;
     let tokenContract;
@@ -66,13 +66,12 @@ describe('Vote', function () {
         });
 
         async function voteSetup(
+            contract,
             receiverAccount,
             fileName,
             fileHash,
             snoozeMs
         ) {
-            // Vote setup
-            contract = await eoslimeTool.Contract.deployOnAccount(DIR_WASM_PATH, DIR_ABI_PATH, receiverAccount);
             await contract.mkdir(receiverAccount.name, "dir");
 
             let dirprofile_tbl = await contract.provider.eos.getTableRows({
@@ -113,7 +112,7 @@ describe('Vote', function () {
             return [contract, creq_id]
         };
 
-        async function vote_change_request(creqId, approve) {
+        async function vote_change_request(contract, creqId, approve) {
             await contract.voteoncreq(
                 creqId,
                 receiverAccount.name,
@@ -140,21 +139,23 @@ describe('Vote', function () {
         };
 
         it('Should vote on entry.', async () => {
+            var contract = await eoslimeTool.Contract.deployOnAccount(DIR_WASM_PATH, DIR_ABI_PATH, receiverAccount);
             let vote_setup_res = await voteSetup(
+                contract,
                 receiverAccount,
                 "src/lib.rs",
                 "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
                 snooze_ms
             );
 
-            let contract = vote_setup_res[0];
+            contract = vote_setup_res[0];
             let creq_id = vote_setup_res[1];
 
             await snooze(snooze_ms);
 
             // Vote
 
-            vote_res = await vote_change_request(creq_id, 1);
+            vote_res = await vote_change_request(contract, creq_id, 1);
 
             vote = vote_res[0];
             vote_amount = vote_res[1];
@@ -171,21 +172,23 @@ describe('Vote', function () {
         });
 
         it('Should add a no vote to a change request', async () => {
+            var contract = await eoslimeTool.Contract.deployOnAccount(DIR_WASM_PATH, DIR_ABI_PATH, receiverAccount);
             let vote_setup_res = await voteSetup(
+                contract,
                 receiverAccount,
                 "src/lib.rs",
                 "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
                 snooze_ms
             );
 
-            let contract = vote_setup_res[0];
+            contract = vote_setup_res[0];
             let creq_id = vote_setup_res[1];
 
             await snooze(snooze_ms);
 
             // Vote
 
-            vote_res = await vote_change_request(creq_id, 0);
+            vote_res = await vote_change_request(contract, creq_id, 0);
 
             vote = vote_res[0];
             vote_amount = vote_res[1];
@@ -202,27 +205,29 @@ describe('Vote', function () {
         });
 
         it('Should not add duplicate vote for a change request', async () => {
+            var contract = await eoslimeTool.Contract.deployOnAccount(DIR_WASM_PATH, DIR_ABI_PATH, receiverAccount);
             let vote_setup_res = await voteSetup(
+                contract,
                 receiverAccount,
                 "src/lib.rs",
                 "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
                 snooze_ms
             );
 
-            let contract = vote_setup_res[0];
+            contract = vote_setup_res[0];
             let creq_id = vote_setup_res[1];
 
             await snooze(snooze_ms);
 
             // Vote
 
-            vote_res = await vote_change_request(creq_id, 0);
+            vote_res = await vote_change_request(contract, creq_id, 0);
 
             await snooze(snooze_ms);
 
             //Voting again is not allowed!
             try {
-                await vote_change_request(creq_id, 0);
+                await vote_change_request(contract, creq_id, 0);
              } catch (error) {
                      err_json = JSON.parse(error);
                      err_code = err_json.code;
