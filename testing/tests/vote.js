@@ -126,14 +126,14 @@ describe('Vote', function () {
 
             function count(obj) { return Object.keys(obj).length; }
 
-            var vote_tbl_length = count(vote_tbl);
+            var vote_count = count(vote_tbl["rows"]);
 
-            var warning_tbl_length = "Wrong number of votes: " + vote_tbl_length;
+            var warning_tbl_length = "Wrong number of votes: " + vote_count;
 
             var vote_creq_id = vote_tbl["rows"][0]["creq_id"];
             var vote = vote_tbl["rows"][0]["vote"];
             var vote_amount = vote_tbl["rows"][0]["amount"];
-            return [vote, vote_amount, vote_creq_id, vote_tbl_length, warning_tbl_length]
+            return [vote, vote_amount, vote_creq_id, vote_count, warning_tbl_length]
         };
 
         it('Should vote on entry.', async () => {
@@ -159,12 +159,12 @@ describe('Vote', function () {
             vote = vote_res[0];
             vote_amount = vote_res[1];
             vote_creq_id = vote_res[2];
-            vote_tbl_length = vote_res[3];
+            vote_count = vote_res[3];
             warning_tbl_length = vote_res[4];
 
             let vote_amount_convert = await convert_eos_token_amount(vote_amount);
 
-            assert.equal(vote_tbl_length, 2, warning_tbl_length);
+            assert.equal(vote_count, 2, warning_tbl_length);
             assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
             assert.equal(vote, 1, "Voted '1' for 'yes'" );
             assert.equal(vote_amount_convert, SEND_AMOUNT);
@@ -193,12 +193,12 @@ describe('Vote', function () {
             vote = vote_res[0];
             vote_amount = vote_res[1];
             vote_creq_id = vote_res[2];
-            vote_tbl_length = vote_res[3];
+            vote_count = vote_res[3];
             warning_tbl_length = vote_res[4];
 
             let vote_amount_convert = await convert_eos_token_amount(vote_amount);
 
-            assert.equal(vote_tbl_length, 2, warning_tbl_length);
+            assert.equal(vote_count, 2, warning_tbl_length);
             assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
             assert.equal(vote, 0, "Voted '0' for 'no'" );
             assert.equal(vote_amount_convert, SEND_AMOUNT);
@@ -241,12 +241,12 @@ describe('Vote', function () {
             vote = vote_res[0];
             vote_amount = vote_res[1];
             vote_creq_id = vote_res[2];
-            vote_tbl_length = vote_res[3];
+            vote_count = vote_res[3];
             warning_tbl_length = vote_res[4];
 
             let vote_amount_convert = await convert_eos_token_amount(vote_amount);
 
-            assert.equal(vote_tbl_length, 2, warning_tbl_length);
+            assert.equal(vote_count, 2, warning_tbl_length);
             assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
             assert.equal(vote, 0, "Voted '0' for 'no'" );
             assert.equal(vote_amount_convert, SEND_AMOUNT);
@@ -282,12 +282,12 @@ describe('Vote', function () {
             vote = vote_res[0];
             vote_amount = vote_res[1];
             vote_creq_id = vote_res[2];
-            vote_tbl_length = vote_res[3];
+            vote_count = vote_res[3];
             warning_tbl_length = vote_res[4];
 
             var vote_amount_convert = await convert_eos_token_amount(vote_amount);
 
-            assert.equal(vote_tbl_length, 2, warning_tbl_length);
+            assert.equal(vote_count, 2, warning_tbl_length);
             assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
             assert.equal(vote, 1, "Voted '1' for 'yes'" );
             assert.equal(vote_amount_convert, SEND_AMOUNT);
@@ -316,12 +316,12 @@ describe('Vote', function () {
             //vote = vote_res[0];
             //vote_amount = vote_res[1];
             //vote_creq_id = vote_res[2];
-            //vote_tbl_length = vote_res[3];
+            //vote_count = vote_res[3];
             //warning_tbl_length = vote_res[4];
 
             //vote_amount_convert = await convert_eos_token_amount(vote_amount);
 
-            //assert.equal(vote_tbl_length, 2, warning_tbl_length);
+            //assert.equal(vote_count, 2, warning_tbl_length);
             //assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
             //assert.equal(vote, 1, "Voted '1' for 'yes'" );
             //assert.equal(vote_amount_convert, SEND_AMOUNT);
