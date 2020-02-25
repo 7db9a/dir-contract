@@ -11,10 +11,6 @@ Sends a change request. Should be made public.
 Retract a change request. Should be made public.
 <h1 class="contract">voteoncreq</h1>
 Vote on a change request. Should be made public.
-<h1 class="contract">updatecreqvote</h1>
-Update a change request vote. Should be made public.
-<h1 class="contract">unvotecreq</h1>
-Remove a change request votes. Should be made public.
 <h1 class="contract">addcreq</h1>
 Private.
 <h1 class="contract">delcreq</h1>
