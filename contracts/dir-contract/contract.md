@@ -15,17 +15,7 @@ Vote on a change request. Should be made public.
 Private.
 <h1 class="contract">delcreq</h1>
 Private.
-<h1 class="contract">delcreq</h1>
-Private.
-<h1 class="contract">addcreqvote</h1>
-Private.
-<h1 class="contract">upcreqvote</h1>
-Private.
-<h1 class="contract">delcreqvote</h1>
-Private.
 <h1 class="contract">closecreqvoting</h1>
 Private.
 <h1 class="contract">purgecreqvtbl</h1>
-Private.
-<h1 class="contract">delcreq</h1>
 Private.
