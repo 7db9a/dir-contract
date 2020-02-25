@@ -311,7 +311,7 @@ describe('Vote', function () {
 
             vote_amount_convert = await convert_eos_token_amount(vote_amount);
 
-            assert.equal(vote_count, 1, warning_tbl_length);
+            assert.equal(vote_count, 2, warning_tbl_length);
             assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
             assert.equal(vote, 1, "Voted '1' for 'yes'" );
             assert.equal(vote_amount_convert, SEND_AMOUNT);
