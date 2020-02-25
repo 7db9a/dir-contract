@@ -10,7 +10,6 @@ const DIR_ABI_PATH =  '../../../project/contracts/dir-contract/dircontract.abi.j
 const TOKEN_ABI_PATH = '../../../project/contracts/eosio_token/eosio_token.abi.json';
 const TOKEN_WASM_PATH = '../../../project/eosio_token_gc.wasm';
 const TOTAL_SUPPLY = '1000000000.0000 SYS';
-const SEND_AMOUNT = '20.0000';
 
 /*
     You should have running local nodeos in order to run tests
@@ -51,18 +50,21 @@ describe('Vote', function () {
 
     describe('Vote operations', function () {
         async function createRandomUser(
+            send_amount
         ) {
             receiverAccount = await Account.createRandom();
             console.log("receiverAccount name:\n" + receiverAccount.name);
-            await tokenContract.transfer(tokenAccount.name, receiverAccount.name, SEND_AMOUNT + ' SYS', 'SYS')
-            let receiverBalanceAfterSend = await receiverAccount.getBalance('SYS');
-            assert(receiverBalanceAfterSend[0] == `${SEND_AMOUNT} SYS`, 'Incorrect tokens amount after send');
+            if (send_amount > '0.0000') {
+                await tokenContract.transfer(tokenAccount.name, receiverAccount.name, send_amount + ' SYS', 'SYS')
+                let receiverBalanceAfterSend = await receiverAccount.getBalance('SYS');
+                assert(receiverBalanceAfterSend[0] == `${send_amount} SYS`, 'Incorrect tokens amount after send');
+            }
 
             return receiverAccount
         };
 
         beforeEach(async() => {
-            receiverAccount = await createRandomUser();
+            receiverAccount = await createRandomUser('20.0000');
         });
 
         async function voteSetup(
@@ -167,7 +169,7 @@ describe('Vote', function () {
             assert.equal(vote_count, 1, warning_tbl_length);
             assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
             assert.equal(vote, 1, "Voted '1' for 'yes'" );
-            assert.equal(vote_amount_convert, SEND_AMOUNT);
+            assert.equal(vote_amount_convert, '20.0000');
         });
 
         it('Should add a no vote to a change request', async () => {
@@ -201,7 +203,7 @@ describe('Vote', function () {
             assert.equal(vote_count, 1, warning_tbl_length);
             assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
             assert.equal(vote, 0, "Voted '0' for 'no'" );
-            assert.equal(vote_amount_convert, SEND_AMOUNT);
+            assert.equal(vote_amount_convert, '20.0000');
         });
 
         it('Should not add duplicate vote for a change request', async () => {
@@ -249,7 +251,7 @@ describe('Vote', function () {
             assert.equal(vote_count, 1, warning_tbl_length);
             assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
             assert.equal(vote, 0, "Voted '0' for 'no'" );
-            assert.equal(vote_amount_convert, SEND_AMOUNT);
+            assert.equal(vote_amount_convert, '20.0000');
 
             // If we get a 409, it likely means the two contract calls were seen as duplicates
             // by nodeos. Basically a data race. Consider sleeping for a few ms in between
@@ -290,11 +292,11 @@ describe('Vote', function () {
             assert.equal(vote_count, 1, warning_tbl_length);
             assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
             assert.equal(vote, 1, "Voted '1' for 'yes'" );
-            assert.equal(vote_amount_convert, SEND_AMOUNT);
+            assert.equal(vote_amount_convert, '20.0000');
 
             // Second user
 
-            receiverAccount = await createRandomUser();
+            receiverAccount = await createRandomUser('20.0000');
             contract = await eoslimeTool.Contract.at(contract.name, receiverAccount);
 
             await snooze(snooze_ms);
@@ -314,7 +316,7 @@ describe('Vote', function () {
             assert.equal(vote_count, 2, warning_tbl_length);
             assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
             assert.equal(vote, 1, "Voted '1' for 'yes'" );
-            assert.equal(vote_amount_convert, SEND_AMOUNT);
+            assert.equal(vote_amount_convert, '20.0000');
         });
     });
 });
