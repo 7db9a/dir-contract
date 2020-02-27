@@ -93,7 +93,7 @@ pub fn removefile(
 #[eosio::action]
 pub fn updatefile(
     file_id: u64,
-    ipfs_hash: String,
+    new_ipfs_hash: String,
     contributor: AccountName,
 ) {
     require_auth(contributor);
@@ -105,7 +105,8 @@ pub fn updatefile(
 
     let mut file = cursor.get().expect("fail to read");
 
-    file.ipfs_hash = ipfs_hash;
+    file.ipfs_hash = new_ipfs_hash;
+    file.contributor = contributor;
 
     cursor.modify(Payer::Same, file).expect("fail to write");
 }

@@ -139,7 +139,7 @@
                     "type": "uint64"
                 },
                 {
-                    "name": "ipfs_hash",
+                    "name": "new_ipfs_hash",
                     "type": "string"
                 },
                 {
