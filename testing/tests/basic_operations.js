@@ -444,7 +444,7 @@ describe('Basic operations', function () {
     })
 
     describe('Update files', function () {
-        it.only('Should update a file in a dir', async () => {
+        it('Should update a file in a dir', async () => {
            await snooze(snooze_ms);
 
            await contract.addfile(
