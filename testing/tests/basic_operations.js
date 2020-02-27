@@ -510,8 +510,7 @@ describe('Basic operations', function () {
            assert.equal(file_name, "src/lib.rs");
            assert.equal(
                file_hash,
-               //newHash
-               "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
+               newHash
             );
 
         });
