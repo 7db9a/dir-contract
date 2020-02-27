@@ -131,6 +131,24 @@
             ]
         },
         {
+            "name": "updatefile",
+            "base": "",
+            "fields": [
+                {
+                    "name": "file_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "ipfs_hash",
+                    "type": "string"
+                },
+                {
+                    "name": "contributor",
+                    "type": "account_name"
+                }
+            ]
+        },
+        {
             "name": "sendcreq",
             "base": "",
             "fields": [
@@ -212,6 +230,11 @@
             "name": "removefile",
             "type": "removefile",
             "ricardian_contract": "Removes a file to a dirsitory."
+        },
+        {
+            "name": "updatefile",
+            "type": "updatefile",
+            "ricardian_contract": "Udates a file tin a dirsitory."
         },
         {
             "name": "sendcreq",

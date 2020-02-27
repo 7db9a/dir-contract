@@ -91,6 +91,26 @@ pub fn removefile(
 }
 
 #[eosio::action]
+pub fn updatefile(
+    file_id: u64,
+    ipfs_hash: String,
+    contributor: AccountName,
+) {
+    require_auth(contributor);
+
+    let _self = current_receiver();
+    let table = dir::table(_self, _self);
+
+    let cursor = table.find(file_id).expect("File not found");
+
+    let mut file = cursor.get().expect("fail to read");
+
+    file.ipfs_hash = ipfs_hash;
+
+    cursor.modify(Payer::Same, file).expect("fail to write");
+}
+
+#[eosio::action]
 pub fn sendcreq(
    dir_id: u64, 
    file_name: String,
