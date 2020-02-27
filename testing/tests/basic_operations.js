@@ -444,7 +444,7 @@ describe('Basic operations', function () {
     })
 
     describe('Update files', function () {
-        it('Should update a file in a dir', async () => {
+        it.only('Should update a file in a dir', async () => {
            await snooze(snooze_ms);
 
            await contract.addfile(
@@ -454,7 +454,7 @@ describe('Basic operations', function () {
                contract.executor.name,
            );
 
-           let dir_tbl = await contract.provider.eos.getTableRows({
+           var dir_tbl = await contract.provider.eos.getTableRows({
                code: contract.name,
                scope: contract.name,
                table: "dir",
@@ -467,9 +467,9 @@ describe('Basic operations', function () {
 
            console.log(util.inspect(myObject, {showHidden: false, depth: null}));
 
-           let file_id = dir_tbl["rows"][0]["file_id"];
-           let file_name = dir_tbl["rows"][0]["file_Name"];
-           let file_hash = dir_tbl["rows"][0]["ipfs_hash"];
+           var file_id = dir_tbl["rows"][0]["file_id"];
+           var file_name = dir_tbl["rows"][0]["file_Name"];
+           var file_hash = dir_tbl["rows"][0]["ipfs_hash"];
 
            assert.equal(file_id, 0, "Wrong file id.");
            assert.equal(dir_name, "dir", "Wrong dir name.");
@@ -478,7 +478,40 @@ describe('Basic operations', function () {
            assert.equal(file_name, "src/lib.rs");
            assert.equal(
                file_hash,
-               "NEWHASH"
+               "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
+            );
+
+           await snooze(snooze_ms);
+
+           const newHash = "QmcghRZ7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC646n2a";
+
+           await contract.updatefile(
+               file_id,
+               newHash,
+               contract.executor.name,
+           );
+
+           dir_tbl = await contract.provider.eos.getTableRows({
+               code: contract.name,
+               scope: contract.name,
+               table: "dir",
+               json: true
+           });
+
+
+           file_id = dir_tbl["rows"][0]["file_id"];
+           file_name = dir_tbl["rows"][0]["file_Name"];
+           file_hash = dir_tbl["rows"][0]["ipfs_hash"];
+
+           assert.equal(file_id, 0, "Wrong file id.");
+           assert.equal(dir_name, "dir", "Wrong dir name.");
+           assert.equal(owner, contract.executor.name, "Wrong dir owner.");
+
+           assert.equal(file_name, "src/lib.rs");
+           assert.equal(
+               file_hash,
+               //newHash
+               "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
             );
 
         });
