@@ -17,6 +17,23 @@ impl Table for Account {
     }
 }
 
+#[derive(Read, Write, NumBytes, Copy, Clone)]
+pub struct CurrencyStats {
+    pub supply: Asset,
+    pub max_supply: Asset,
+    pub issuer: AccountName,
+}
+
+impl Table for CurrencyStats {
+    const NAME: TableName = TableName::new(n!("stat"));
+
+    type Row = Self;
+
+    fn primary_key(row: &Self::Row) -> u64 {
+        row.supply.symbol.code().as_u64()
+    }
+}
+
 //#[eosio::action]
 //pub fn balance(owner: AccountName, symbol: Symbol) {
 //    let balance = getbalance(owner, symbol);
