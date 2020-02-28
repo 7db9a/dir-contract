@@ -106,7 +106,7 @@ pub fn updatefile(
     let mut file = cursor.get().expect("fail to read");
 
     file.ipfs_hash = new_ipfs_hash;
-    file.contributor = contributor;
+    file.last_contributor = contributor;
 
     cursor.modify(Payer::Same, file).expect("fail to write");
 }
