@@ -29,8 +29,6 @@ describe('Vote', function () {
     var tokenContract;
     var tokenAccount;
     var receiverAccount;
-    var dir_id;
-    var dir_name;
     var owner;
     var snooze_ms = 300;
 
@@ -74,25 +72,9 @@ describe('Vote', function () {
             fileHash,
             snoozeMs
         ) {
-            let dirprofile_tbl = await contract.provider.eos.getTableRows({
-                code: contract.name,
-                scope: contract.name,
-                table: "dirprofile",
-                json: true
-            });
-
-            dir_id = dirprofile_tbl["rows"][0]["dir_id"];
-            dir_name = dirprofile_tbl["rows"][0]["dir_name"];
-            owner = dirprofile_tbl["rows"][0]["owner"];
-
-            assert.equal(dir_id, 0, "Wrong dir id.");
-            assert.equal(dir_name, "dir", "Wrong dir name.");
-            assert.equal(owner, contract.executor.name, "Wrong dir owner.");
-
             await snooze(snoozeMs);
 
             await contract.sendcreq(
-                dir_id,
                 fileName,
                 fileHash,
                 receiverAccount.name,
@@ -140,7 +122,6 @@ describe('Vote', function () {
 
         it('Should vote on entry.', async () => {
             var contract = await eoslimeTool.Contract.deployOnAccount(DIR_WASM_PATH, DIR_ABI_PATH, receiverAccount);
-            await contract.mkdir(receiverAccount.name, "dir");
             let vote_setup_res = await voteSetup(
                 contract,
                 receiverAccount,
@@ -174,7 +155,6 @@ describe('Vote', function () {
 
         it('Should add a no vote to a change request', async () => {
             var contract = await eoslimeTool.Contract.deployOnAccount(DIR_WASM_PATH, DIR_ABI_PATH, receiverAccount);
-            await contract.mkdir(receiverAccount.name, "dir");
             let vote_setup_res = await voteSetup(
                 contract,
                 receiverAccount,
@@ -208,7 +188,6 @@ describe('Vote', function () {
 
         it('Should not add duplicate vote for a change request', async () => {
             var contract = await eoslimeTool.Contract.deployOnAccount(DIR_WASM_PATH, DIR_ABI_PATH, receiverAccount);
-            await contract.mkdir(receiverAccount.name, "dir");
             let vote_setup_res = await voteSetup(
                 contract,
                 receiverAccount,
@@ -263,7 +242,6 @@ describe('Vote', function () {
 
         it('Should allow two users to vote on the same entry.', async () => {
             var contract = await eoslimeTool.Contract.deployOnAccount(DIR_WASM_PATH, DIR_ABI_PATH, receiverAccount);
-            await contract.mkdir(receiverAccount.name, "dir");
             var vote_setup_res = await voteSetup(
                 contract,
                 receiverAccount,
@@ -321,7 +299,6 @@ describe('Vote', function () {
 
         it('Should not allow an account with no tokens to vote on a change request', async () => {
             var contract = await eoslimeTool.Contract.deployOnAccount(DIR_WASM_PATH, DIR_ABI_PATH, receiverAccount);
-            await contract.mkdir(receiverAccount.name, "dir");
             let vote_setup_res = await voteSetup(
                 contract,
                 receiverAccount,
