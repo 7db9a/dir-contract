@@ -54,7 +54,7 @@ pub fn voteoncreq(
     vote_table.emplace(voter, &a_vote).check("write");
 }
 
-eosio_cdt::abi!(mkdir, addfile, removefile, updatefile, sendcreq, voteoncreq);
+eosio_cdt::abi!(addfile, removefile, updatefile, sendcreq, voteoncreq);
 
 #[eosio::table("vote")]
 pub struct vote {
