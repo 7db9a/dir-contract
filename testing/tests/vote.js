@@ -11,6 +11,90 @@ const TOKEN_ABI_PATH = '../../../project/contracts/eosio_token/eosio_token.abi.j
 const TOKEN_WASM_PATH = '../../../project/eosio_token_gc.wasm';
 const TOTAL_SUPPLY = '1000000000.0000 SYS';
 
+var contract;
+var tokensIssuer;
+var tokensHolder;
+var tokenContract;
+var tokenAccount;
+var receiverAccount;
+var owner;
+var snooze_ms = 300;
+
+// We call this at the top of each test case, otherwise nodeosd could
+// throw duplication errors (ie, data races).
+const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+async function createRandomUser(
+    send_amount
+) {
+    receiverAccount = await Account.createRandom();
+    console.log("receiverAccount name:\n" + receiverAccount.name);
+    if (send_amount > '0.0000') {
+        await tokenContract.transfer(tokenAccount.name, receiverAccount.name, send_amount + ' SYS', 'SYS')
+        let receiverBalanceAfterSend = await receiverAccount.getBalance('SYS');
+        assert(receiverBalanceAfterSend[0] == `${send_amount} SYS`, 'Incorrect tokens amount after send');
+    }
+
+    return receiverAccount
+};
+
+
+async function voteSetup(
+    contract,
+    receiverAccount,
+    fileName,
+    fileHash,
+    snoozeMs
+) {
+    await snooze(snoozeMs);
+
+    await contract.sendcreq(
+        fileName,
+        fileHash,
+        receiverAccount.name,
+    );
+
+    let creq_tbl = await contract.provider.eos.getTableRows({
+        code: contract.name,
+        scope: contract.name,
+        table: "creq",
+        json: true
+    });
+
+    let creq_id = creq_tbl["rows"][0]["creq_id"];
+
+    assert.equal(creq_id, 0, "Wrong change request id.");
+
+    return [contract, creq_id]
+};
+
+async function vote_change_request(contract, creqId, approve) {
+    await contract.voteoncreq(
+        creqId,
+        receiverAccount.name,
+        approve,
+    );
+
+    var vote_tbl = await contract.provider.eos.getTableRows({
+        code: contract.name,
+        scope: contract.name,
+        table: "vote",
+        json: true
+    });
+
+    function count(obj) { return Object.keys(obj).length; }
+
+    var vote_count = count(vote_tbl["rows"]);
+
+    var warning_tbl_length = "Wrong number of votes: " + vote_count;
+
+    var vote_creq_id = vote_tbl["rows"][0]["creq_id"];
+    var vote = vote_tbl["rows"][0]["vote"];
+    var vote_amount = vote_tbl["rows"][0]["amount"];
+    return [vote, vote_amount, vote_creq_id, vote_count, warning_tbl_length]
+};
+
+
 /*
     You should have running local nodeos in order to run tests
 */
@@ -23,19 +107,6 @@ describe('Vote', function () {
     // Increase mocha(testing framework) time, otherwise tests fails
     this.timeout(15000);
 
-    var contract;
-    var tokensIssuer;
-    var tokensHolder;
-    var tokenContract;
-    var tokenAccount;
-    var receiverAccount;
-    var owner;
-    var snooze_ms = 300;
-
-    // We call this at the top of each test case, otherwise nodeosd could
-    // throw duplication errors (ie, data races).
-    const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
-
     before(async () => {
         // Creates eosio.token account if you don't have it
         tokenAccount = await Account.createFromName('eosio.token');
@@ -47,78 +118,9 @@ describe('Vote', function () {
 
 
     describe('Vote operations', function () {
-        async function createRandomUser(
-            send_amount
-        ) {
-            receiverAccount = await Account.createRandom();
-            console.log("receiverAccount name:\n" + receiverAccount.name);
-            if (send_amount > '0.0000') {
-                await tokenContract.transfer(tokenAccount.name, receiverAccount.name, send_amount + ' SYS', 'SYS')
-                let receiverBalanceAfterSend = await receiverAccount.getBalance('SYS');
-                assert(receiverBalanceAfterSend[0] == `${send_amount} SYS`, 'Incorrect tokens amount after send');
-            }
-
-            return receiverAccount
-        };
-
         beforeEach(async() => {
             receiverAccount = await createRandomUser('20.0000');
         });
-
-        async function voteSetup(
-            contract,
-            receiverAccount,
-            fileName,
-            fileHash,
-            snoozeMs
-        ) {
-            await snooze(snoozeMs);
-
-            await contract.sendcreq(
-                fileName,
-                fileHash,
-                receiverAccount.name,
-            );
-
-            let creq_tbl = await contract.provider.eos.getTableRows({
-                code: contract.name,
-                scope: contract.name,
-                table: "creq",
-                json: true
-            });
-
-            let creq_id = creq_tbl["rows"][0]["creq_id"];
-
-            assert.equal(creq_id, 0, "Wrong change request id.");
-
-            return [contract, creq_id]
-        };
-
-        async function vote_change_request(contract, creqId, approve) {
-            await contract.voteoncreq(
-                creqId,
-                receiverAccount.name,
-                approve,
-            );
-
-            var vote_tbl = await contract.provider.eos.getTableRows({
-                code: contract.name,
-                scope: contract.name,
-                table: "vote",
-                json: true
-            });
-
-            function count(obj) { return Object.keys(obj).length; }
-
-            var vote_count = count(vote_tbl["rows"]);
-
-            var warning_tbl_length = "Wrong number of votes: " + vote_count;
-
-            var vote_creq_id = vote_tbl["rows"][0]["creq_id"];
-            var vote = vote_tbl["rows"][0]["vote"];
-            var vote_amount = vote_tbl["rows"][0]["amount"];
-            return [vote, vote_amount, vote_creq_id, vote_count, warning_tbl_length]
-        };
 
         it('Should vote on entry.', async () => {
             var contract = await eoslimeTool.Contract.deployOnAccount(DIR_WASM_PATH, DIR_ABI_PATH, receiverAccount);
