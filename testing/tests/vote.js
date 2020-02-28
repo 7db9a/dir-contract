@@ -85,13 +85,14 @@ async function vote_change_request(contract, creqId, approve) {
     function count(obj) { return Object.keys(obj).length; }
 
     var vote_count = count(vote_tbl["rows"]);
+    var index = vote_count - 1;
 
     var warning_tbl_length = "Wrong number of votes: " + vote_count;
 
-    var vote_creq_id = vote_tbl["rows"][0]["creq_id"];
-    var vote = vote_tbl["rows"][0]["vote"];
-    var vote_amount = vote_tbl["rows"][0]["amount"];
-    var voter = vote_tbl["rows"][0]["voter"];
+    var vote_creq_id = vote_tbl["rows"][index]["creq_id"];
+    var vote = vote_tbl["rows"][index]["vote"];
+    var vote_amount = vote_tbl["rows"][index]["amount"];
+    var voter = vote_tbl["rows"][index]["voter"];
 
     return [vote, vote_amount, vote_creq_id, vote_count, warning_tbl_length, voter]
 };
@@ -244,7 +245,7 @@ describe('Vote', function () {
             assert.equal(eosio_err_name, "eosio_assert_message_exception", "Duplicate vote.");
         });
 
-        it.only('Should allow two users to vote on the same entry.', async () => {
+        it('Should allow two users to vote on the same entry.', async () => {
             var contract = await eoslimeTool.Contract.deployOnAccount(DIR_WASM_PATH, DIR_ABI_PATH, receiverAccount);
             var vote_setup_res = await voteSetup(
                 contract,
