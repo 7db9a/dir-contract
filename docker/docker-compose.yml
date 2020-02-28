@@ -4,7 +4,7 @@ services:
   nodeosd:
     image: rust-eos-dev:0.2.0
     # Append --delete-all-blocks to the below command if you want a brand new blockchain.
-    command: nodeos -e -p eosio --plugin eosio::producer_plugin --plugin eosio::chain_api_plugin --plugin eosio::http_plugin --plugin eosio::history_plugin --plugin eosio::history_api_plugin --access-control-allow-origin='*' --contracts-console --http-validate-host=false --http-server-address=0.0.0.0:8888 --verbose-http-errors --filter-on '"*"' "|" "tee nodeos.log" --max-transaction-time=100 --delete-all-blocks
+    command: nodeos -e -p eosio --plugin eosio::producer_plugin --plugin eosio::chain_api_plugin --plugin eosio::http_plugin --plugin eosio::history_plugin --plugin eosio::history_api_plugin --access-control-allow-origin='*' --contracts-console --http-validate-host=false --http-server-address=0.0.0.0:8888 --verbose-http-errors --filter-on '"*"' "|" "tee nodeos.log" --max-transaction-time=200 --delete-all-blocks
     hostname: nodeosd
     ports:
       - 8888:8888
