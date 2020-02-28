@@ -120,6 +120,73 @@ describe('Vote', function () {
     });
 
 
+    describe('Tally votes', function () {
+        it.only('Should pick majority winner.', async () => {
+            var receiverAccount = await createRandomUser('20.0000');
+            var contract = await eoslimeTool.Contract.deployOnAccount(DIR_WASM_PATH, DIR_ABI_PATH, receiverAccount);
+            var vote_setup_res = await voteSetup(
+                contract,
+                receiverAccount,
+                "src/lib.rs",
+                "QmcDsPV7QZFHKb2DNn8GWsU5dtd8zH5DNRa31geC63ceb1",
+                snooze_ms
+            );
+
+            contract = vote_setup_res[0];
+            var creq_id = vote_setup_res[1];
+
+            await snooze(snooze_ms);
+
+            // Vote
+
+            vote_res = await vote_change_request(contract, creq_id, 1);
+
+            vote = vote_res[0];
+            vote_amount = vote_res[1];
+            vote_creq_id = vote_res[2];
+            vote_count = vote_res[3];
+            warning_tbl_length = vote_res[4];
+            voterA = vote_res[5];
+
+            var vote_amount_convert = await convert_eos_token_amount(vote_amount);
+
+            assert.equal(vote_count, 1, warning_tbl_length);
+            assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
+            assert.equal(vote, 1, "Voted '1' for 'yes'" );
+            assert.equal(vote_amount_convert, '20.0000');
+
+            // Second user
+
+            receiverAccount = await createRandomUser('20.0001');
+            contract = await eoslimeTool.Contract.at(contract.name, receiverAccount);
+
+            await snooze(snooze_ms);
+
+            //// Vote
+
+            vote_res = await vote_change_request(contract, creq_id, 1);
+
+            vote = vote_res[0];
+            vote_amount = vote_res[1];
+            vote_creq_id = vote_res[2];
+            vote_count = vote_res[3];
+            warning_tbl_length = vote_res[4];
+            voterB = vote_res[5];
+
+            vote_amount_convert = await convert_eos_token_amount(vote_amount);
+
+            assert.equal(vote_count, 2, warning_tbl_length);
+            assert.equal(creq_id, vote_creq_id, "The vote table doesn't have the right change request ID.");
+            assert.equal(vote, 1, "Voted '1' for 'yes'" );
+            assert.equal(vote_amount_convert, '20.0001');
+            assert.notEqual(voterA, voterB);
+
+            let winner = "Alice";
+            assert.equal(winner, "Bob")
+        });
+
+    });
+
     describe('Vote operations', function () {
         beforeEach(async() => {
             receiverAccount = await createRandomUser('20.0000');
